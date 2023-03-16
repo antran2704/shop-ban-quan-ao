@@ -1,0 +1,43 @@
+.navbarMobile {
+  transform: translateX(-100%);
+  opacity: 0;
+  transition: all linear 0.2s;
+
+  &.show {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}
+
+.navbarLayoutClose {
+  opacity: 0;
+  pointer-events: none;
+  transition: all linear 0.2s;
+
+  &.show {
+    opacity: 1;
+    pointer-events: inherit;
+  }
+}
+
+.navbarItem:hover .navbarMega {
+  top: 32px;
+  opacity: 1;
+  pointer-events: inherit;
+}
+
+.navbarMega {
+  opacity: 0;
+  pointer-events: none;
+  transition: all linear 0.2s;
+}
+
+.navbarMega::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -10px;
+  height: 30px;
+  background-color: transparent;
+}
