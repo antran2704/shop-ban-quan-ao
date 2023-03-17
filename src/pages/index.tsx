@@ -1,73 +1,426 @@
 import Link from "next/link";
+import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from "react-icons/md";
 import { Navigation, Pagination, EffectFade, Autoplay } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 export default function Home() {
   return (
-    <div id="banner" className="w-full lg:h-[500px] md:h-[450px] sm:h-[400px] h-[340px] ">
-      <Swiper
-        // install Swiper modules
-        modules={[Navigation, Pagination, EffectFade, Autoplay]}
-        effect="fade"
-        slidesPerView={1}
-        loop={true}
-        enabled={true}
-        speed={600}
-        autoplay={true}
-        breakpoints={{
-          960: {
-            navigation: {
-             enabled: true
-            },
-          },
-        }}
-        navigation={{enabled: false}}
-        pagination={{ clickable: true }}
-        className="w-full h-full"
+    <div>
+      {/* banner */}
+      <section
+        id="banner"
+        className="w-full lg:h-[500px] md:h-[450px] sm:h-[400px] h-[340px] "
       >
-        <SwiperSlide
-          className="relative flex items-center sm:justify-start justify-center w-full h-full bg-cover bg-center md:pl-24 px-5"
-          style={{ backgroundImage: "url(/images/banner1.webp)" }}
+        <Swiper
+          modules={[Navigation, Pagination, EffectFade, Autoplay]}
+          effect="fade"
+          slidesPerView={1}
+          loop={true}
+          enabled={true}
+          speed={600}
+          autoplay={true}
+          breakpoints={{
+            960: {
+              navigation: {
+                enabled: true,
+              },
+            },
+          }}
+          navigation={{ enabled: false }}
+          pagination={{ clickable: true }}
+          className="w-full h-full"
         >
-          <div className="lg:w-6/12 sm:w-8/12 w-full">
-            <p className="banner__subtitle text-xl text-normal text-[#1e1e1e]">
-              Best Wooden Products
+          <SwiperSlide
+            className="relative flex items-center sm:justify-start justify-center w-full h-full bg-cover bg-center md:pl-24 px-5"
+            style={{ backgroundImage: "url(/images/banner1.webp)" }}
+          >
+            <div className="lg:w-6/12 sm:w-8/12 w-full">
+              <p className="banner__subtitle text-xl text-normal text-[#1e1e1e]">
+                Best Wooden Products
+              </p>
+              <h2 className="banner__title lg:text-6xl md:text-5xl sm:text-4xl text-3xl text-[#1e1e1e] font-semibold mt-4 md:mb-8 mb-4">
+                New Sell Handmade Collection
+              </h2>
+              <button className="banner__btn border-0">
+                <Link
+                  href={"/"}
+                  className="flex items-center justify-center text-base text-medium text-white bg-[#9ea18e] hover:bg-[#1e1e1e] transition-all duration-100 ease-linear px-5 py-2 rounded-md"
+                >
+                  Shop Now
+                </Link>
+              </button>
+            </div>
+          </SwiperSlide>
+          <SwiperSlide
+            className="relative flex items-center sm:justify-start justify-center w-full h-full bg-cover bg-center md:pl-24 px-5"
+            style={{ backgroundImage: "url(/images/banner2.webp)" }}
+          >
+            <div className="lg:w-6/12 sm:w-8/12 w-full">
+              <p className="banner__subtitle text-xl text-normal text-[#1e1e1e]">
+                Best Wooden Products
+              </p>
+              <h2 className="banner__title lg:text-6xl md:text-5xl sm:text-4xl text-3xl text-[#1e1e1e] font-semibold mt-4 md:mb-8 mb-4">
+                New Sell Handmade Collection
+              </h2>
+              <button className="banner__btn border-0">
+                <Link
+                  href={"/"}
+                  className="flex items-center justify-center text-base text-medium text-white bg-[#9ea18e] hover:bg-[#1e1e1e] transition-all duration-100 ease-linear px-5 py-2 rounded-md"
+                >
+                  Shop Now
+                </Link>
+              </button>
+            </div>
+          </SwiperSlide>
+        </Swiper>
+      </section>
+
+      {/* Category */}
+      <section className="category my-10">
+        <div className="container__cus">
+          <div className="flex items-center justify-between mb-6">
+            <p className="text-xl font-normal text-[#1e1e1e]">
+              Shop By Category
             </p>
-            <h2 className="banner__title lg:text-6xl md:text-5xl sm:text-4xl text-3xl text-[#1e1e1e] font-semibold mt-4 md:mb-8 mb-4">
-              New Sell Handmade Collection
-            </h2>
-            <button className="banner__btn border-0">
-              <Link
-                href={"/"}
-                className="flex items-center justify-center text-base text-medium text-white bg-[#9ea18e] hover:bg-[#1e1e1e] transition-all duration-100 ease-linear px-5 py-2 rounded-md"
-              >
-                Shop Now
-              </Link>
-            </button>
+            <div className="flex items-center gap-2">
+              <button className="category__btn-prev flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-[#9ea18e] rounded-full transition-all duration-100">
+                <MdKeyboardArrowLeft className="text-3xl text-[#9ea18e] hover:text-white" />
+              </button>
+              <button className="category__btn-next flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-[#9ea18e] rounded-full transition-all duration-100">
+                <MdKeyboardArrowRight className="text-3xl text-[#9ea18e] hover:text-white" />
+              </button>
+            </div>
           </div>
-        </SwiperSlide>
-        <SwiperSlide
-          className="relative flex items-center sm:justify-start justify-center w-full h-full bg-cover bg-center md:pl-24 px-5"
-          style={{ backgroundImage: "url(/images/banner2.webp)" }}
-        >
-          <div className="lg:w-6/12 sm:w-8/12 w-full">
-            <p className="banner__subtitle text-xl text-normal text-[#1e1e1e]">
-              Best Wooden Products
-            </p>
-            <h2 className="banner__title lg:text-6xl md:text-5xl sm:text-4xl text-3xl text-[#1e1e1e] font-semibold mt-4 md:mb-8 mb-4">
-              New Sell Handmade Collection
-            </h2>
-            <button className="banner__btn border-0">
-              <Link
-                href={"/"}
-                className="flex items-center justify-center text-base text-medium text-white bg-[#9ea18e] hover:bg-[#1e1e1e] transition-all duration-100 ease-linear px-5 py-2 rounded-md"
-              >
-                Shop Now
-              </Link>
-            </button>
+          <div className="lg:p-8 md:p-6 p-4 rounded-md border border-[#e5e5e5] ">
+            <Swiper
+              modules={[Navigation]}
+              slidesPerView={2}
+              spaceBetween={20}
+              navigation={{
+                nextEl: ".category__btn-next",
+                prevEl: ".category__btn-prev",
+              }}
+              breakpoints={{
+                478: {
+                  slidesPerView: 3,
+                },
+                650: {
+                  slidesPerView: 4,
+                },
+                990: {
+                  slidesPerView: 5,
+                },
+              }}
+            >
+              <SwiperSlide className="w-2/12">
+                <Link href={"/"} className="w-ful">
+                  <img
+                    src="/images/category-1.avif"
+                    alt="image category"
+                    className="w-full rounded-xl"
+                  />
+                </Link>
+                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
+                  Architecture Art Lorem
+                </p>
+                <a
+                  href="#"
+                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                >
+                  View more
+                </a>
+              </SwiperSlide>
+              <SwiperSlide className="w-2/12">
+                <Link href={"/"} className="w-ful">
+                  <img
+                    src="/images/category-2.avif"
+                    alt="image category"
+                    className="w-full rounded-xl"
+                  />
+                </Link>
+                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
+                  Theater Art
+                </p>
+                <a
+                  href="#"
+                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                >
+                  View more
+                </a>
+              </SwiperSlide>
+              <SwiperSlide className="w-2/12">
+                <Link href={"/"} className="w-ful">
+                  <img
+                    src="/images/category-3.avif"
+                    alt="image category"
+                    className="w-full rounded-xl"
+                  />
+                </Link>
+                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
+                  Ceramics Art
+                </p>
+                <a
+                  href="#"
+                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                >
+                  View more
+                </a>
+              </SwiperSlide>
+              <SwiperSlide className="w-2/12">
+                <Link href={"/"} className="w-ful">
+                  <img
+                    src="/images/category-4.avif"
+                    alt="image category"
+                    className="w-full rounded-xl"
+                  />
+                </Link>
+                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
+                  Sculpture Art
+                </p>
+                <a
+                  href="#"
+                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                >
+                  View more
+                </a>
+              </SwiperSlide>
+              <SwiperSlide className="w-2/12">
+                <Link href={"/"} className="w-ful">
+                  <img
+                    src="/images/category-5.avif"
+                    alt="image category"
+                    className="w-full rounded-xl"
+                  />
+                </Link>
+                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
+                  Painting Art
+                </p>
+                <a
+                  href="#"
+                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                >
+                  View more
+                </a>
+              </SwiperSlide>
+              <SwiperSlide className="w-2/12">
+                <Link href={"/"} className="w-ful">
+                  <img
+                    src="/images/category-1.avif"
+                    alt="image category"
+                    className="w-full rounded-xl"
+                  />
+                </Link>
+                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
+                  Architecture Art Lorem
+                </p>
+                <a
+                  href="#"
+                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                >
+                  View more
+                </a>
+              </SwiperSlide>
+              <SwiperSlide className="w-2/12">
+                <Link href={"/"} className="w-ful">
+                  <img
+                    src="/images/category-2.avif"
+                    alt="image category"
+                    className="w-full rounded-xl"
+                  />
+                </Link>
+                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
+                  Theater Art
+                </p>
+                <a
+                  href="#"
+                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                >
+                  View more
+                </a>
+              </SwiperSlide>
+              <SwiperSlide className="w-2/12">
+                <Link href={"/"} className="w-ful">
+                  <img
+                    src="/images/category-3.avif"
+                    alt="image category"
+                    className="w-full rounded-xl"
+                  />
+                </Link>
+                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
+                  Ceramics Art
+                </p>
+                <a
+                  href="#"
+                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                >
+                  View more
+                </a>
+              </SwiperSlide>
+              <SwiperSlide className="w-2/12">
+                <Link href={"/"} className="w-ful">
+                  <img
+                    src="/images/category-4.avif"
+                    alt="image category"
+                    className="w-full rounded-xl"
+                  />
+                </Link>
+                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
+                  Sculpture Art
+                </p>
+                <a
+                  href="#"
+                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                >
+                  View more
+                </a>
+              </SwiperSlide>
+              <SwiperSlide className="w-2/12">
+                <Link href={"/"} className="w-ful">
+                  <img
+                    src="/images/category-5.avif"
+                    alt="image category"
+                    className="w-full rounded-xl"
+                  />
+                </Link>
+                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
+                  Painting Art
+                </p>
+                <a
+                  href="#"
+                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                >
+                  View more
+                </a>
+              </SwiperSlide>
+            </Swiper>
           </div>
-        </SwiperSlide>
-      </Swiper>
+        </div>
+      </section>
+
+      {/* Category */}
+      <section className="trending my-10">
+        <div className="container__cus">
+          <div className="flex items-center justify-between mb-6">
+            <p className="text-xl font-normal text-[#1e1e1e]">Best Seller</p>
+            <div className="flex items-center gap-2">
+              <button className="trending__btn-prev flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-[#9ea18e] rounded-full transition-all duration-100">
+                <MdKeyboardArrowLeft className="text-3xl text-[#9ea18e] hover:text-white" />
+              </button>
+              <button className="trending__btn-next flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-[#9ea18e] rounded-full transition-all duration-100">
+                <MdKeyboardArrowRight className="text-3xl text-[#9ea18e] hover:text-white" />
+              </button>
+            </div>
+          </div>
+          <Swiper
+            modules={[Navigation]}
+            slidesPerView={2}
+            spaceBetween={10}
+            navigation={{
+              nextEl: ".trending__btn-next",
+              prevEl: ".trending__btn-prev",
+            }}
+            breakpoints={{
+              478: {
+                slidesPerView: 3,
+                spaceBetween: 14,
+              },
+              650: {
+                slidesPerView: 4,
+                spaceBetween: 18,
+              },
+              990: {
+                slidesPerView: 5,
+                spaceBetween: 20,
+              },
+            }}
+          >
+            <SwiperSlide className="w-2/12 md:p-4 p-3 rounded-md border border-[#e5e5e5]">
+              <Link href={"/"} className="w-ful">
+                <img
+                  src="/images/category-1.avif"
+                  alt="image category"
+                  className="w-full rounded-xl"
+                />
+              </Link>
+              <p className="md:text-base text-sm font-normal text-[#1e1e1e] text-start mt-3 truncate">
+                Chinese Style Black Iron Table Lamp
+              </p>
+              <div className="flex items-center">
+                <span className="inline-block md:text-base sm:text-sm text-xs text-[#1e1e1e]">
+                  $250.00
+                </span>
+                <span className="inline-block md:text-base sm:text-sm text-xs text-[#1e1e1e] line-through">
+                  $290.00
+                </span>
+              </div>
+              <button className="mt-3">
+                <Link
+                  href={"/"}
+                  className="flex items-center justify-center md:text-base sm:text-sm text-xs font-normal bg-[#f0f0f0] hover:bg-[#9ea18e] text-[#1e1e1e] hover:text-white py-2 md:px-6 px-2 rounded"
+                >
+                  Select option
+                </Link>
+              </button>
+            </SwiperSlide>
+            <SwiperSlide className="w-2/12 md:p-4 p-3 rounded-md border border-[#e5e5e5]">
+              <Link href={"/"} className="w-ful">
+                <img
+                  src="/images/category-1.avif"
+                  alt="image category"
+                  className="w-full rounded-xl"
+                />
+              </Link>
+              <p className="md:text-base text-sm font-normal text-[#1e1e1e] text-start mt-3 truncate">
+                Chinese Style Black Iron Table Lamp
+              </p>
+              <div className="flex items-center">
+                <span className="inline-block md:text-base sm:text-sm text-xs text-[#1e1e1e]">
+                  $250.00
+                </span>
+                <span className="inline-block md:text-base sm:text-sm text-xs text-[#1e1e1e] line-through">
+                  $290.00
+                </span>
+              </div>
+              <button className="mt-3">
+                <Link
+                  href={"/"}
+                  className="flex items-center justify-center md:text-base sm:text-sm text-xs font-normal bg-[#f0f0f0] hover:bg-[#9ea18e] text-[#1e1e1e] hover:text-white py-2 md:px-6 px-2 rounded"
+                >
+                  Select option
+                </Link>
+              </button>
+            </SwiperSlide>
+            <SwiperSlide className="w-2/12 md:p-4 p-3 rounded-md border border-[#e5e5e5]">
+              <Link href={"/"} className="w-ful">
+                <img
+                  src="/images/category-1.avif"
+                  alt="image category"
+                  className="w-full rounded-xl"
+                />
+              </Link>
+              <p className="md:text-base text-sm font-normal text-[#1e1e1e] text-start mt-3 truncate">
+                Chinese Style Black Iron Table Lamp
+              </p>
+              <div className="flex items-center">
+                <span className="inline-block md:text-base sm:text-sm text-xs text-[#1e1e1e]">
+                  $250.00
+                </span>
+                <span className="inline-block md:text-base sm:text-sm text-xs text-[#1e1e1e] line-through">
+                  $290.00
+                </span>
+              </div>
+              <button className="mt-3">
+                <Link
+                  href={"/"}
+                  className="flex items-center justify-center md:text-base sm:text-sm text-xs font-normal bg-[#f0f0f0] hover:bg-[#9ea18e] text-[#1e1e1e] hover:text-white py-2 md:px-6 px-2 rounded"
+                >
+                  Select option
+                </Link>
+              </button>
+            </SwiperSlide>
+          </Swiper>
+        </div>
+      </section>
     </div>
   );
 }
