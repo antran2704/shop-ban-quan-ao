@@ -300,7 +300,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Category */}
+      {/* Best Seller */}
       <section className="trending my-10">
         <div className="container__cus">
           <div className="flex items-center justify-between mb-6">
@@ -379,7 +379,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Cate */}
+      {/* Brands */}
       <section className="my-10">
         <div className="container__cus">
           <Swiper
@@ -435,8 +435,8 @@ export default function Home() {
 
       {/* Get Our Latets Update  */}
       <section
-        className="flex items-center justify-center w-full h-[370px] bg-cover bg-center md:pl-24 px-5 my-10"
-        style={{ backgroundImage: "url(/images/newsletter-parallax.webp)" }}
+        className="flex items-center justify-center w-full h-[370px] bg-cover bg-center md:pl-24 px-5 mt-10"
+        style={{ backgroundImage: "url(/images/newsletter-parallax.webp)", backgroundAttachment: "fixed" }}
       >
         <div>
           <h2 className="text-3xl text-[#1e1e1e] text-center font-medium">

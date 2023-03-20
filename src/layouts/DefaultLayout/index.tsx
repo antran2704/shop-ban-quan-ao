@@ -1,5 +1,10 @@
+import dynamic from "next/dynamic";
 import React, {FC} from "react";
-import Navbar from "~/components/Navbar/Navbar";
+import Footer from "~/components/Footer";
+
+const Navbar = dynamic(() => import('~/components/Navbar/Navbar'), {
+    ssr: false,
+  })
 
 interface Props {
     children: JSX.Element,
@@ -10,6 +15,7 @@ const DefaultLayout:FC<Props> = ({children}: Props) => {
         <main>
             <Navbar />
             {children}
+            <Footer />
         </main>
      );
 }

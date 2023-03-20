@@ -41,3 +41,12 @@
   height: 30px;
   background-color: transparent;
 }
+
+.navbarScroll {
+  top: -100px;
+  transition: all linear 0.3s;
+
+  &.show {
+    top: 0;
+  }
+}
