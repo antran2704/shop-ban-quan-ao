@@ -1,27 +1,11 @@
-import Link from "next/link";
 import { FC } from "react";
+import Header from "~/components/Header";
 
 const Contact: FC = () => {
   return (
     <div>
-      {/* header */}
-      <header
-        className="flex items-center lg:h-[200px] h-[140px] bg-cover bg-center"
-        style={{
-          backgroundImage: "url(/images/breadcrumb_1.webp)",
-        }}
-      >
-        <div className="container__cus w-full">
-          <h1 className="text-4xl font-medium mb-2">Contact</h1>
-          <div className="flex items-center text-lg gap-2">
-            <Link href={"/"}>Home</Link>
-            <span>|</span>
-            <span className="text-[#f8796c]">Contact</span>
-          </div>
-        </div>
-      </header>
-
-      <section className="my-10">
+      <Header title={"Contact"} link={"/"}/> 
+      <section className="my-16">
         <div className="container__cus flex lg:flex-nowrap flex-wrap items-start justify-between gap-5">
           <div
             className="lg:w-1/3 w-full md:h-[320px] h-[260px] flex flex-col items-center justify-center py-10 px-8 rounded gap-2"
