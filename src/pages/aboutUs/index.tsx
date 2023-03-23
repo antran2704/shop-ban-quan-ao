@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Navigation, Pagination, EffectFade, Autoplay } from "swiper";
+import { Pagination, Autoplay } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import Header from "~/components/Header";
@@ -92,7 +92,7 @@ const Contact: FC = () => {
       </section>
 
       {/* Client Feedback */}
-      <section className="container__cus">
+      <section className="client__feedback container__cus">
         <div className="py-10">
           <h2 className="w-1/2 text-4xl font-bold text-center mx-auto">
             Client Feedback
@@ -102,39 +102,84 @@ const Contact: FC = () => {
           </p>
 
           <Swiper
-            modules={[Autoplay]}
-            loop={true}
+            modules={[Autoplay, Pagination]}
             spaceBetween={20}
+            loop={true}
             enabled={true}
             autoplay={{
               delay: 4000,
             }}
             slidesPerView={1}
             breakpoints={{
-                800: {
-                  slidesPerView: 2,
-                },
-              }}
+              800: {
+                slidesPerView: 2,
+              },
+            }}
+            pagination={{ clickable: true }}
             className="my-10"
           >
             <SwiperSlide className="flex items-start justify-between lg:p-10 p-6 border border-[#e4ecf2] gap-10">
-              <img src="/images/team1.avif" alt="image" className="w-[120p] h-[120px]"/>
+              <img
+                src="/images/team1.avif"
+                alt="image"
+                className="w-[120p] h-[120px]"
+              />
               <div>
                 <p className="lg:text-lg text-base">
                   Lorem ipsum ctetur elit, sed do eius mod tempor incididunt ut
                   labore et dolore magna aliqua.
                 </p>
-                <h2 className="lg:text-xl text-base font-medium mt-5">Lanal Julman</h2>
+                <h2 className="lg:text-xl text-base font-medium mt-5">
+                  Lanal Julman
+                </h2>
               </div>
             </SwiperSlide>
             <SwiperSlide className="flex items-start justify-between lg:p-10 p-6 border border-[#e4ecf2] gap-10">
-              <img src="/images/team1.avif" alt="image" className="w-[120p] h-[120px]"/>
+              <img
+                src="/images/team1.avif"
+                alt="image"
+                className="w-[120p] h-[120px]"
+              />
               <div>
                 <p className="lg:text-lg text-base">
                   Lorem ipsum ctetur elit, sed do eius mod tempor incididunt ut
                   labore et dolore magna aliqua.
                 </p>
-                <h2 className="lg:text-xl text-base font-medium mt-5">Lanal Julman</h2>
+                <h2 className="lg:text-xl text-base font-medium mt-5">
+                  Lanal Julman
+                </h2>
+              </div>
+            </SwiperSlide>
+            <SwiperSlide className="flex items-start justify-between lg:p-10 p-6 border border-[#e4ecf2] gap-10">
+              <img
+                src="/images/team1.avif"
+                alt="image"
+                className="w-[120p] h-[120px]"
+              />
+              <div>
+                <p className="lg:text-lg text-base">
+                  Lorem ipsum ctetur elit, sed do eius mod tempor incididunt ut
+                  labore et dolore magna aliqua.
+                </p>
+                <h2 className="lg:text-xl text-base font-medium mt-5">
+                  Lanal Julman
+                </h2>
+              </div>
+            </SwiperSlide>
+            <SwiperSlide className="flex items-start justify-between lg:p-10 p-6 border border-[#e4ecf2] gap-10">
+              <img
+                src="/images/team1.avif"
+                alt="image"
+                className="w-[120p] h-[120px]"
+              />
+              <div>
+                <p className="lg:text-lg text-base">
+                  Lorem ipsum ctetur elit, sed do eius mod tempor incididunt ut
+                  labore et dolore magna aliqua.
+                </p>
+                <h2 className="lg:text-xl text-base font-medium mt-5">
+                  Lanal Julman
+                </h2>
               </div>
             </SwiperSlide>
           </Swiper>

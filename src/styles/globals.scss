@@ -17,7 +17,6 @@ body {
   pointer-events: none;
 }
 
-
 // banner
 #banner {
   &:hover {
@@ -41,7 +40,7 @@ body {
     height: 12px;
 
     &.swiper-pagination-bullet-active {
-        background-color: #1e1e1e;
+      background-color: #1e1e1e;
     }
   }
 
@@ -115,7 +114,10 @@ body {
   }
 }
 
-// category
-.category {
-  
+// Client Feedback
+.client__feedback {
+  .swiper-pagination {
+    position: relative;
+    margin-top: 20px;
+  }
 }
