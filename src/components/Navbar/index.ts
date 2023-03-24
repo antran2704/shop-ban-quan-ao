@@ -16,8 +16,14 @@ export const initItemMobile: INavItem[] = [
     ],
   },
   {
-    name: "Blog",
-    path: "/blog",
+    name: "Collections",
+    path: "/collections",
+    children: [
+      {
+        name: "Test",
+        path: "/collections/test",
+      },
+    ],
   },
   {
     name: "About Us",

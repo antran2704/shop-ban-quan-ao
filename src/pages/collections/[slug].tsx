@@ -1,30 +1,31 @@
+import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { FC, useRef } from "react";
-import { AiOutlineStar, AiFillStar } from "react-icons/ai";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
-import FillterItem from "~/components/Fillter";
+import FilterItem from "~/components/Filter";
 
 import Header from "~/components/Header";
+import ProductItem from "~/components/ProductItem";
 
-const CollectionItem: FC = () => {
+interface Props {
+  query: any;
+}
+
+const CollectionItem: FC<Props> = (props: Props) => {
   const btnSubmitFilterRef = useRef<HTMLButtonElement>(null);
-
-  const onChangeFilter = (): void => {
-    const button = btnSubmitFilterRef.current;
-    if (button) {
-      button.click();
-    }
-  };
+  const { query } = props;
+  console.log(query);
   return (
     <div>
       <Header title={"Collection item"} link={"/"} />
       <div className="container__cus">
-        <div className="flex items-start justify-between my-10 gap-10">
-          <div className="w-3/12">
+        <div className="flex lg:flex-nowrap flex-wrap items-start justify-between my-10 gap-10">
+          <div className="lg:w-3/12 w-full">
             <form>
-              <button ref={btnSubmitFilterRef} type="submit"></button>
-              <FillterItem
+              <FilterItem
                 titleFilter="Availability"
+                typeFilter="checkBox"
                 listFilterItem={[
                   {
                     labelFilter: "In stock",
@@ -32,9 +33,9 @@ const CollectionItem: FC = () => {
                     paramFilter: "availability",
                   },
                 ]}
-                onChangeFilter={onChangeFilter}
+                query={query}
               />
-              <FillterItem
+              <FilterItem
                 titleFilter="Color"
                 listFilterItem={[
                   {
@@ -48,9 +49,11 @@ const CollectionItem: FC = () => {
                     paramFilter: "color",
                   },
                 ]}
-                onChangeFilter={onChangeFilter}
+                typeFilter="checkBox"
+                query={query}
               />
-              <FillterItem
+              <FilterItem titleFilter="Price" typeFilter="price" />
+              <FilterItem
                 titleFilter="Brand"
                 listFilterItem={[
                   {
@@ -64,239 +67,75 @@ const CollectionItem: FC = () => {
                     paramFilter: "brand",
                   },
                 ]}
-                onChangeFilter={onChangeFilter}
+                typeFilter="checkBox"
+                query={query}
               />
+              <button
+                ref={btnSubmitFilterRef}
+                type="submit"
+                className="w-full flex items-center justify-center bg-[#f8796c] text-white text-lg font-medium px-5 py-2 mt-3"
+              >
+                Filter Now
+              </button>
             </form>
           </div>
-          <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 w-9/12 gap-4">
-            <div className="relative md:p-4 p-3 rounded-md border border-[#e5e5e5]">
-              <Link href={"/"} className="w-ful">
-                <img
-                  src="/images/category-1.avif"
-                  alt="image category"
-                  className="w-full rounded-xl"
-                />
-              </Link>
-              <p className="md:text-base text-sm font-normal text-[#1e1e1e] text-start mt-3 truncate">
-                Chinese Style Black Iron Table Lamp
-              </p>
-              <div className="flex items-center my-1">
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="inline-block md:text-base sm:text-sm text-xs text-[#1e1e1e]">
-                  $250.00
-                </span>
-                <span className="inline-block md:text-base sm:text-sm text-xs text-[#666] line-through">
-                  $290.00
-                </span>
-              </div>
-              <button className="md:w-auto w-full mt-3">
+          <div className="lg:w-9/12 w-full">
+            <p className="text-lg text-right font-medium">
+              Showing 1 - 12 of 26 result
+            </p>
+            <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 mt-5 gap-4">
+              <ProductItem />
+              <ProductItem />
+              <ProductItem />
+              <ProductItem />
+              <ProductItem />
+              <ProductItem />
+              <ProductItem />
+            </div>
+
+            {/* pagination */}
+            <ul className="flex items-center justify-center mt-10 gap-3">
+              <li className="sm:w-12 sm:h-12 w-10 h-10">
                 <Link
                   href={"/"}
-                  className="flex items-center justify-center md:text-base sm:text-sm text-xs font-normal bg-[#f0f0f0] hover:bg-[#9ea18e] text-[#1e1e1e] hover:text-white py-2 md:px-4 px-2 rounded"
+                  className="flex items-center justify-center w-full h-full bg-white hover:bg-[#f8796c] hover:text-white text-lg font-medium border border-[#e5e5e5] transition-all ease-linear duration-100"
                 >
-                  Select option
+                  <MdKeyboardArrowLeft className="sm:text-3xl text-xl" />
                 </Link>
-              </button>
-              <span className="absolute top-2 left-2 text-xs font-medium py-0.5 px-2 bg-[#7e7e7e] text-[#ffffff] rounded">
-                -13%
-              </span>
-            </div>
-            <div className="relative md:p-4 p-3 rounded-md border border-[#e5e5e5]">
-              <Link href={"/"} className="w-ful">
-                <img
-                  src="/images/category-1.avif"
-                  alt="image category"
-                  className="w-full rounded-xl"
-                />
-              </Link>
-              <p className="md:text-base text-sm font-normal text-[#1e1e1e] text-start mt-3 truncate">
-                Chinese Style Black Iron Table Lamp
-              </p>
-              <div className="flex items-center my-1">
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="inline-block md:text-base sm:text-sm text-xs text-[#1e1e1e]">
-                  $250.00
-                </span>
-                <span className="inline-block md:text-base sm:text-sm text-xs text-[#666] line-through">
-                  $290.00
-                </span>
-              </div>
-              <button className="md:w-auto w-full mt-3">
+              </li>
+              <li className="sm:w-12 sm:h-12 w-10 h-10">
                 <Link
                   href={"/"}
-                  className="flex items-center justify-center md:text-base sm:text-sm text-xs font-normal bg-[#f0f0f0] hover:bg-[#9ea18e] text-[#1e1e1e] hover:text-white py-2 md:px-4 px-2 rounded"
+                  className="flex items-center justify-center w-full h-full bg-white hover:bg-[#f8796c] hover:text-white text-lg font-medium border border-[#e5e5e5] transition-all ease-linear duration-100"
                 >
-                  Select option
+                  1
                 </Link>
-              </button>
-              <span className="absolute top-2 left-2 text-xs font-medium py-0.5 px-2 bg-[#7e7e7e] text-[#ffffff] rounded">
-                -13%
-              </span>
-            </div>
-            <div className="relative md:p-4 p-3 rounded-md border border-[#e5e5e5]">
-              <Link href={"/"} className="w-ful">
-                <img
-                  src="/images/category-1.avif"
-                  alt="image category"
-                  className="w-full rounded-xl"
-                />
-              </Link>
-              <p className="md:text-base text-sm font-normal text-[#1e1e1e] text-start mt-3 truncate">
-                Chinese Style Black Iron Table Lamp
-              </p>
-              <div className="flex items-center my-1">
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="inline-block md:text-base sm:text-sm text-xs text-[#1e1e1e]">
-                  $250.00
-                </span>
-                <span className="inline-block md:text-base sm:text-sm text-xs text-[#666] line-through">
-                  $290.00
-                </span>
-              </div>
-              <button className="md:w-auto w-full mt-3">
+              </li>
+              <li className="sm:w-12 sm:h-12 w-10 h-10">
                 <Link
                   href={"/"}
-                  className="flex items-center justify-center md:text-base sm:text-sm text-xs font-normal bg-[#f0f0f0] hover:bg-[#9ea18e] text-[#1e1e1e] hover:text-white py-2 md:px-4 px-2 rounded"
+                  className="flex items-center justify-center w-full h-full bg-white hover:bg-[#f8796c] hover:text-white text-lg font-medium border border-[#e5e5e5] transition-all ease-linear duration-100"
                 >
-                  Select option
+                  2
                 </Link>
-              </button>
-              <span className="absolute top-2 left-2 text-xs font-medium py-0.5 px-2 bg-[#7e7e7e] text-[#ffffff] rounded">
-                -13%
-              </span>
-            </div>
-            <div className="relative md:p-4 p-3 rounded-md border border-[#e5e5e5]">
-              <Link href={"/"} className="w-ful">
-                <img
-                  src="/images/category-1.avif"
-                  alt="image category"
-                  className="w-full rounded-xl"
-                />
-              </Link>
-              <p className="md:text-base text-sm font-normal text-[#1e1e1e] text-start mt-3 truncate">
-                Chinese Style Black Iron Table Lamp
-              </p>
-              <div className="flex items-center my-1">
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="inline-block md:text-base sm:text-sm text-xs text-[#1e1e1e]">
-                  $250.00
-                </span>
-                <span className="inline-block md:text-base sm:text-sm text-xs text-[#666] line-through">
-                  $290.00
-                </span>
-              </div>
-              <button className="md:w-auto w-full mt-3">
+              </li>
+              <li className="sm:w-12 sm:h-12 w-10 h-10">
                 <Link
                   href={"/"}
-                  className="flex items-center justify-center md:text-base sm:text-sm text-xs font-normal bg-[#f0f0f0] hover:bg-[#9ea18e] text-[#1e1e1e] hover:text-white py-2 md:px-4 px-2 rounded"
+                  className="flex items-center justify-center w-full h-full bg-white hover:bg-[#f8796c] hover:text-white text-lg font-medium border border-[#e5e5e5] transition-all ease-linear duration-100"
                 >
-                  Select option
+                  3
                 </Link>
-              </button>
-              <span className="absolute top-2 left-2 text-xs font-medium py-0.5 px-2 bg-[#7e7e7e] text-[#ffffff] rounded">
-                -13%
-              </span>
-            </div>
-            <div className="relative md:p-4 p-3 rounded-md border border-[#e5e5e5]">
-              <Link href={"/"} className="w-ful">
-                <img
-                  src="/images/category-1.avif"
-                  alt="image category"
-                  className="w-full rounded-xl"
-                />
-              </Link>
-              <p className="md:text-base text-sm font-normal text-[#1e1e1e] text-start mt-3 truncate">
-                Chinese Style Black Iron Table Lamp
-              </p>
-              <div className="flex items-center my-1">
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="inline-block md:text-base sm:text-sm text-xs text-[#1e1e1e]">
-                  $250.00
-                </span>
-                <span className="inline-block md:text-base sm:text-sm text-xs text-[#666] line-through">
-                  $290.00
-                </span>
-              </div>
-              <button className="md:w-auto w-full mt-3">
+              </li>
+              <li className="sm:w-12 sm:h-12 w-10 h-10">
                 <Link
                   href={"/"}
-                  className="flex items-center justify-center md:text-base sm:text-sm text-xs font-normal bg-[#f0f0f0] hover:bg-[#9ea18e] text-[#1e1e1e] hover:text-white py-2 md:px-4 px-2 rounded"
+                  className="flex items-center justify-center w-full h-full bg-white hover:bg-[#f8796c] hover:text-white text-lg font-medium border border-[#e5e5e5] transition-all ease-linear duration-100"
                 >
-                  Select option
+                  <MdKeyboardArrowRight className="sm:text-3xl text-xl" />
                 </Link>
-              </button>
-              <span className="absolute top-2 left-2 text-xs font-medium py-0.5 px-2 bg-[#7e7e7e] text-[#ffffff] rounded">
-                -13%
-              </span>
-            </div>
-            <div className="relative md:p-4 p-3 rounded-md border border-[#e5e5e5]">
-              <Link href={"/"} className="w-ful">
-                <img
-                  src="/images/category-1.avif"
-                  alt="image category"
-                  className="w-full rounded-xl"
-                />
-              </Link>
-              <p className="md:text-base text-sm font-normal text-[#1e1e1e] text-start mt-3 truncate">
-                Chinese Style Black Iron Table Lamp
-              </p>
-              <div className="flex items-center my-1">
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-                <AiFillStar className="text-sm text-[#ffc30e]" />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="inline-block md:text-base sm:text-sm text-xs text-[#1e1e1e]">
-                  $250.00
-                </span>
-                <span className="inline-block md:text-base sm:text-sm text-xs text-[#666] line-through">
-                  $290.00
-                </span>
-              </div>
-              <button className="md:w-auto w-full mt-3">
-                <Link
-                  href={"/"}
-                  className="flex items-center justify-center md:text-base sm:text-sm text-xs font-normal bg-[#f0f0f0] hover:bg-[#9ea18e] text-[#1e1e1e] hover:text-white py-2 md:px-4 px-2 rounded"
-                >
-                  Select option
-                </Link>
-              </button>
-              <span className="absolute top-2 left-2 text-xs font-medium py-0.5 px-2 bg-[#7e7e7e] text-[#ffffff] rounded">
-                -13%
-              </span>
-            </div>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -305,3 +144,11 @@ const CollectionItem: FC = () => {
 };
 
 export default CollectionItem;
+
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  return {
+    props: {
+      query,
+    },
+  };
+};

@@ -162,13 +162,29 @@ const Navbar: FC = () => {
               /> */}
             </ul>
           </li>
-          <li>
+          <li className={`${styles.navbarItem} relative`}>
             <Link
-              href="/blog"
+              href="/collections"
               className="text-lg font-medium px-5 py-2 text-[#1e1e1e] hover:text-[#9ea18e] transition-all ease-linear duration-100"
             >
-              Blog
+              Collections
             </Link>
+            <ul
+              className={`${styles.navbarMega} absolute top-10 flex items-start bg-white shadow-lg gap-5 z-10`}
+            >
+              <div className="px-6 py-4">
+                <ul className="flex flex-col items-start gap-2">
+                  <li className="w-full">
+                    <Link
+                      href="/collections/test"
+                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
+                    >
+                      test
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </ul>
           </li>
           <li>
             <Link
@@ -371,13 +387,29 @@ const Navbar: FC = () => {
               </div>
             </ul>
           </li>
-          <li>
+          <li className={`${styles.navbarItem} relative`}>
             <Link
-              href="/blog"
+              href="/collections"
               className="text-lg font-medium px-5 py-2 text-[#1e1e1e] hover:text-[#9ea18e] transition-all ease-linear duration-100"
             >
-              Blog
+              Collections
             </Link>
+            <ul
+              className={`${styles.navbarMega} absolute top-10 flex items-start bg-white shadow-lg gap-5 z-10`}
+            >
+              <div className="px-6 py-4">
+                <ul className="flex flex-col items-start gap-2">
+                  <li className="w-full">
+                    <Link
+                      href="/collections/test"
+                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
+                    >
+                      test
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </ul>
           </li>
           <li>
             <Link
