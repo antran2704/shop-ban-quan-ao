@@ -8,17 +8,17 @@ function Footer() {
           <img src="/images/logo.webp" alt="logo image" className="w-100" />
         </Link>
         <div className="flex items-start md:text-lg text-base gap-1">
-          <span className="font-medium">Address: </span>
+          <span className="font-medium w-[60px]">Address: </span>
           <p>55 Nguyễn Kiệm, phường 3, Quận Gò Vấp, TP.HCM</p>
         </div>
         <div className="flex items-start md:text-lg text-base gap-1">
-          <span className="font-medium">Phone: </span>
+          <span className="font-medium w-[60px]">Phone: </span>
           <a href="tel:0946003423" className="hover:underline">
             0946003423
           </a>
         </div>
         <div className="flex items-start md:text-lg text-base gap-1">
-          <span className="font-medium">Email: </span>
+          <span className="font-medium w-[60px]">Email: </span>
           <a href="mailto:phamtrangiaan27@gmail.com" className="hover:underline">
             phamtrangiaan27@gmail.com
           </a>

@@ -84,7 +84,7 @@ const Contact: FC = () => {
               placeholder="Enter your message"
               className="w-full h-[150px] md:text-lg text-base px-5 py-2 border border-[#ddd]"
             ></textarea>
-            <button className="h-11 sm:w-2/12 w-full px-5 text-white bg-[#9ea18e]">
+            <button className="h-11 sm:w-2/12 w-full px-5 text-white bg-primary">
               Subscribe
             </button>
           </form>

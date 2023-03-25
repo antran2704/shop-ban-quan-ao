@@ -20,7 +20,7 @@ const Header: FC<Props> = (props: Props) => {
         <div className="flex items-center text-lg gap-2">
           <Link href={`${link}`}>Home</Link>
           <span>|</span>
-          <span className="text-[#f8796c]">{title}</span>
+          <span className="text-primary">{title}</span>
         </div>
       </div>
     </header>

@@ -3,8 +3,9 @@ import { FC } from "react";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 
 const ProductItem: FC = () => {
+  
   return (
-    <div className="relative md:p-4 p-3 rounded-md border border-[#e5e5e5]">
+    <div className="relative md:p-4 p-3 rounded-md border border-borderColor">
       <Link href={"/"} className="w-ful">
         <img
           src="/images/category-1.avif"
@@ -33,12 +34,12 @@ const ProductItem: FC = () => {
       <button className="md:w-auto w-full mt-3">
         <Link
           href={"/"}
-          className="flex items-center justify-center md:text-base sm:text-sm text-xs font-normal bg-[#f0f0f0] hover:bg-[#9ea18e] text-[#1e1e1e] hover:text-white py-2 md:px-4 px-2 rounded transition-all ease-linear duration-150"
+          className="flex items-center justify-center md:text-base sm:text-sm text-xs font-normal bg-[#f0f0f0] hover:bg-primary text-[#1e1e1e] hover:text-white py-2 md:px-4 px-2 rounded transition-all ease-linear duration-150"
         >
           Select option
         </Link>
       </button>
-      <span className="absolute top-2 left-2 text-xs font-medium py-0.5 px-2 bg-[#7e7e7e] text-[#ffffff] rounded">
+      <span className="absolute top-2 left-2 text-xs font-medium py-0.5 px-2 bg-primary text-[#ffffff] rounded">
         -13%
       </span>
     </div>

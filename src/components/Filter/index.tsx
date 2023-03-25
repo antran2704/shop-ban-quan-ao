@@ -23,8 +23,8 @@ const FilterItem: FC<Props> = (props: Props) => {
   const { titleFilter, listFilterItem, typeFilter, query } = props;
 
   const formPriceInit: IFilterPrice = {
-    gte: query?.gte ? query.gte : "",
-    lte: query?.lte ? query.lte : "",
+    gte: "",
+    lte: "",
   };
 
   const listFilterRef = useRef<HTMLUListElement>(null);
@@ -72,10 +72,13 @@ const FilterItem: FC<Props> = (props: Props) => {
     if (element) {
       element.style.height = 0 + "px";
     }
+    if(query.lte && query.gte && typeFilter === "price") {
+        setPrice({lte: query.lte, gte: query.gte});
+    }
   }, []);
 
   return (
-    <div className="w-full pb-4 mb-8 border-b border-[#ededed]">
+    <div className="w-full pb-4 mb-8 border-b border-borderColor">
       <h2
         className="flex items-center justify-between text-xl font-medium"
         onClick={handleShowFilter}
@@ -133,7 +136,7 @@ const FilterItem: FC<Props> = (props: Props) => {
             </div>
             <button
               type="submit"
-              className="w-full flex items-center justify-center bg-[#f8796c] text-white text-lg font-medium px-5 py-2 mt-3"
+              className="w-full flex items-center justify-center bg-primary text-white text-lg font-medium px-5 py-2 mt-3"
             >
               Filter
             </button>

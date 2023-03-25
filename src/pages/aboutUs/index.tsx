@@ -31,7 +31,7 @@ const Contact: FC = () => {
               ipsum dolor sit amet..", comes from a line in section 1.10.32.
             </p>
           </div>
-          <div className="lg:w-[450px] lg:h-[450px] w-[600px] h-[600px]  mx-auto">
+          <div className="lg:w-[450px] lg:h-[450px] mx-auto">
             <img
               src="/images/about1.webp"
               alt="about image"
@@ -43,10 +43,10 @@ const Contact: FC = () => {
       {/* Team Member */}
       <section className="container__cus">
         <div className="py-10">
-          <h2 className="w-1/2 text-4xl font-bold text-center mx-auto">
+          <h2 className="md:w-1/2 w-full text-4xl font-bold text-center mx-auto">
             Team Member
           </h2>
-          <p className="w-1/2 text-lg text-center mx-auto my-1">
+          <p className="md:w-1/2 w-full text-lg text-center mx-auto my-1">
             Our creative team members
           </p>
 
@@ -57,7 +57,7 @@ const Contact: FC = () => {
                 alt="team image"
                 className="rounded-full"
               />
-              <h3 className="text-lg text-[#f8796c] mt-5">DIRECTOR</h3>
+              <h3 className="text-lg text-primary mt-5">DIRECTOR</h3>
               <h2 className="text-xl font-medium">Halbard Ali</h2>
             </div>
             <div className="flex flex-col items-center justify-center px-5 py-10 border border-[#e4ecf2]">
@@ -66,7 +66,7 @@ const Contact: FC = () => {
                 alt="team image"
                 className="rounded-full"
               />
-              <h3 className="text-lg text-[#f8796c] mt-5">CEO</h3>
+              <h3 className="text-lg text-primary mt-5">CEO</h3>
               <h2 className="text-xl font-medium">Joan Bro</h2>
             </div>
             <div className="flex flex-col items-center justify-center px-5 py-10 border border-[#e4ecf2]">
@@ -75,7 +75,7 @@ const Contact: FC = () => {
                 alt="team image"
                 className="rounded-full"
               />
-              <h3 className="text-lg text-[#f8796c] mt-5">DESIGNER</h3>
+              <h3 className="text-lg text-primary mt-5">DESIGNER</h3>
               <h2 className="text-xl font-medium">Albard Melan</h2>
             </div>
             <div className="flex flex-col items-center justify-center px-5 py-10 border border-[#e4ecf2]">
@@ -84,7 +84,7 @@ const Contact: FC = () => {
                 alt="team image"
                 className="rounded-full"
               />
-              <h3 className="text-lg text-[#f8796c] mt-5">MANAGER</h3>
+              <h3 className="text-lg text-primary mt-5">MANAGER</h3>
               <h2 className="text-xl font-medium">Luchi Deniel</h2>
             </div>
           </div>
@@ -94,10 +94,10 @@ const Contact: FC = () => {
       {/* Client Feedback */}
       <section className="client__feedback container__cus">
         <div className="py-10">
-          <h2 className="w-1/2 text-4xl font-bold text-center mx-auto">
+          <h2 className="md:w-1/2 w-full text-4xl font-bold text-center mx-auto">
             Client Feedback
           </h2>
-          <p className="w-1/2 text-lg text-center mx-auto my-1">
+          <p className="md:w-1/2 w-full text-lg text-center mx-auto my-1">
             The valuable opinion of our clients.
           </p>
 

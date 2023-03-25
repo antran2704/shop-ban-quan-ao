@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
+
 import React, { useState, FC, MouseEvent } from "react";
 import {
   AiOutlineSearch,
@@ -9,14 +11,15 @@ import {
 import { BsArrowRightShort, BsArrowLeftShort } from "react-icons/bs";
 import { HiMenu } from "react-icons/hi";
 
-import { initItemMobile } from "./index";
-import { INavItem } from "./interface";
+import { initItemDesktop, initItemMobile } from "./index";
+import { IMegaItem, INavItem } from "./interface";
 
 import useClientY from "~/hooks/useClientY";
 
 import styles from "./Navbar.module.scss";
 
 const Navbar: FC = () => {
+  const router = useRouter();
   const top = useClientY();
 
   const [showNavbar, setShow] = useState<boolean>(false);
@@ -53,155 +56,56 @@ const Navbar: FC = () => {
 
         {/* navbar content on PC */}
         <ul className="lg:flex hidden items-center gap-6">
-          <li>
-            <Link
-              href="/"
-              className="text-lg font-medium px-5 py-2 text-[#1e1e1e] hover:text-[#9ea18e] transition-all ease-linear duration-100"
-            >
-              Home
-            </Link>
-          </li>
-          <li className={`${styles.navbarItem} relative`}>
-            <Link
-              href="/design"
-              className="text-lg font-medium px-5 py-2 text-[#1e1e1e] hover:text-[#9ea18e] transition-all ease-linear duration-100"
-            >
-              Design
-            </Link>
-            <ul
-              className={`${styles.navbarMega} absolute top-10 flex items-start bg-white shadow-lg gap-5 z-10`}
-            >
-              <div className="px-6 py-4">
-                <Link
-                  href={"/"}
-                  className="block w-full text-lg font-normal text-[#1e1e1e] hover:text-[#9ea18e] whitespace-nowrap mb-2"
+          {initItemDesktop.map((item: INavItem, index: number) => (
+            <li key={index} className={`${styles.navbarItem} relative`}>
+              <Link
+                href={item.path}
+                className={`text-lg font-medium px-5 py-2 text-[#1e1e1e] ${
+                  router.asPath === item.path ? "text-primary" : ""
+                } hover:text-primary transition-all ease-linear duration-100`}
+              >
+                {item.name}
+              </Link>
+              {item?.megaMenu && (
+                <ul
+                  className={`${styles.navbarMega} absolute top-10 flex items-start bg-white shadow-lg gap-5 z-10`}
                 >
-                  Arts
-                </Link>
-                <ul className="flex flex-col items-start gap-2">
-                  <li className="w-full">
-                    <Link
-                      href="#"
-                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
-                    >
-                      Architecture Art
-                    </Link>
-                  </li>
-                  <li className="w-full">
-                    <Link
-                      href="#"
-                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
-                    >
-                      Literature Art
-                    </Link>
-                  </li>
-                  <li className="w-full">
-                    <Link
-                      href="#"
-                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
-                    >
-                      Theater Art
-                    </Link>
-                  </li>
-                  <li className="w-full">
-                    <Link
-                      href="#"
-                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
-                    >
-                      Ceramics Art
-                    </Link>
-                  </li>
+                  {item.megaMenu.map((item: IMegaItem, index: number) => (
+                    <div key={index} className="px-6 py-4">
+                      <Link
+                        href={"/"}
+                        className="block w-full text-lg font-normal text-[#1e1e1e] hover:text-primary whitespace-nowrap mb-2"
+                      >
+                        {item.title}
+                      </Link>
+                      <ul className="flex flex-col items-start gap-2">
+                        {item.items.map((item: INavItem, index: number) => (
+                          <li key={index} className="w-full">
+                            <Link
+                              href={item.path}
+                              className={`w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap ${
+                                router.asPath === item.path
+                                  ? "text-primary"
+                                  : ""
+                              }
+                               hover:text-primary transition-all ease-linear duration-100`}
+                            >
+                              {item.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                  {/* <img
+                  src="https://www.livingspaces.com/globalassets/images/nav/02_d_bedroom_0624.jpg"
+                  alt=""
+                  className="h-full "
+                /> */}
                 </ul>
-              </div>
-              <div className="px-6 py-4">
-                <Link
-                  href={"/"}
-                  className="block w-full text-lg font-normal text-[#1e1e1e] hover:text-[#9ea18e] whitespace-nowrap mb-2"
-                >
-                  Arts
-                </Link>
-                <ul className="flex flex-col items-start gap-2">
-                  <li className="w-full">
-                    <Link
-                      href="#"
-                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
-                    >
-                      Architecture Art
-                    </Link>
-                  </li>
-                  <li className="w-full">
-                    <Link
-                      href="#"
-                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
-                    >
-                      Literature Art
-                    </Link>
-                  </li>
-                  <li className="w-full">
-                    <Link
-                      href="#"
-                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
-                    >
-                      Theater Art
-                    </Link>
-                  </li>
-                  <li className="w-full">
-                    <Link
-                      href="#"
-                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
-                    >
-                      Ceramics Art
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-              {/* <img
-                src="https://www.livingspaces.com/globalassets/images/nav/02_d_bedroom_0624.jpg"
-                alt=""
-                className="h-full "
-              /> */}
-            </ul>
-          </li>
-          <li className={`${styles.navbarItem} relative`}>
-            <Link
-              href="/collections"
-              className="text-lg font-medium px-5 py-2 text-[#1e1e1e] hover:text-[#9ea18e] transition-all ease-linear duration-100"
-            >
-              Collections
-            </Link>
-            <ul
-              className={`${styles.navbarMega} absolute top-10 flex items-start bg-white shadow-lg gap-5 z-10`}
-            >
-              <div className="px-6 py-4">
-                <ul className="flex flex-col items-start gap-2">
-                  <li className="w-full">
-                    <Link
-                      href="/collections/test"
-                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
-                    >
-                      test
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </ul>
-          </li>
-          <li>
-            <Link
-              href="/aboutUs"
-              className="text-lg font-medium px-5 py-2 text-[#1e1e1e] hover:text-[#9ea18e] transition-all ease-linear duration-100"
-            >
-              About Us
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/contact"
-              className="text-lg font-medium px-5 py-2 text-[#1e1e1e] hover:text-[#9ea18e] transition-all ease-linear duration-100"
-            >
-              Contact
-            </Link>
-          </li>
+              )}
+            </li>
+          ))}
         </ul>
 
         {/* navbar content on Tablet & Mobile */}
@@ -231,7 +135,10 @@ const Navbar: FC = () => {
               >
                 <Link
                   href={item.path}
-                  className="block w-full text-lg font-medium py-2 text-[#1e1e1e] hover:text-[#9ea18e] transition-all ease-linear duration-100"
+                  onClick={handleShowModal}
+                  className={`block w-full text-lg font-medium py-2 text-[#1e1e1e] ${
+                    router.asPath === item.path ? "text-primary" : ""
+                  } hover:text-primary transition-all ease-linear duration-100`}
                 >
                   {item.name}
                 </Link>
@@ -252,13 +159,13 @@ const Navbar: FC = () => {
           </div>
           <div className="relative cursor-pointer">
             <AiOutlineHeart className="relative lg:text-3xl md:text-2xl text-xl z-0" />
-            <span className="flex items-center justify-center absolute -top-1 -right-2 md:w-5 md:h-5 w-4 h-4 text-xs text-white bg-[#9ea18e] rounded-full z-10">
+            <span className="flex items-center justify-center absolute -top-1 -right-2 md:w-5 md:h-5 w-4 h-4 text-xs text-white bg-primary rounded-full z-10">
               0
             </span>
           </div>
           <div className="relative cursor-pointer">
             <AiOutlineShoppingCart className="relative lg:text-3xl md:text-2xl text-xl z-0" />
-            <span className="flex items-center justify-center absolute -top-1 -right-2 md:w-5 md:h-5 w-4 h-4 text-xs text-white bg-[#9ea18e] rounded-full z-10">
+            <span className="flex items-center justify-center absolute -top-1 -right-2 md:w-5 md:h-5 w-4 h-4 text-xs text-white bg-primary rounded-full z-10">
               0
             </span>
           </div>
@@ -283,192 +190,51 @@ const Navbar: FC = () => {
 
         {/* navbar content on PC */}
         <ul className="lg:flex hidden items-center gap-6">
-          <li>
-            <Link
-              href="/"
-              className="text-lg font-medium px-5 py-2 text-[#1e1e1e] hover:text-[#9ea18e] transition-all ease-linear duration-100"
-            >
-              Home
-            </Link>
-          </li>
-          <li className={`${styles.navbarItem} relative`}>
-            <Link
-              href="/design"
-              className="text-lg font-medium px-5 py-2 text-[#1e1e1e] hover:text-[#9ea18e] transition-all ease-linear duration-100"
-            >
-              Design
-            </Link>
-            <ul
-              className={`${styles.navbarMega} absolute top-10 flex items-start bg-white shadow-lg gap-5 z-10`}
-            >
-              <div className="px-6 py-4">
-                <Link
-                  href={"/"}
-                  className="block w-full text-lg font-normal text-[#1e1e1e] hover:text-[#9ea18e] whitespace-nowrap mb-2"
-                >
-                  Arts
-                </Link>
-                <ul className="flex flex-col items-start gap-2">
-                  <li className="w-full">
-                    <Link
-                      href="#"
-                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
-                    >
-                      Architecture Art
-                    </Link>
-                  </li>
-                  <li className="w-full">
-                    <Link
-                      href="#"
-                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
-                    >
-                      Literature Art
-                    </Link>
-                  </li>
-                  <li className="w-full">
-                    <Link
-                      href="#"
-                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
-                    >
-                      Theater Art
-                    </Link>
-                  </li>
-                  <li className="w-full">
-                    <Link
-                      href="#"
-                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
-                    >
-                      Ceramics Art
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-              <div className="px-6 py-4">
-                <Link
-                  href={"/"}
-                  className="block w-full text-lg font-normal text-[#1e1e1e] hover:text-[#9ea18e] whitespace-nowrap mb-2"
-                >
-                  Arts
-                </Link>
-                <ul className="flex flex-col items-start gap-2">
-                  <li className="w-full">
-                    <Link
-                      href="#"
-                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
-                    >
-                      Architecture Art
-                    </Link>
-                  </li>
-                  <li className="w-full">
-                    <Link
-                      href="#"
-                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
-                    >
-                      Literature Art
-                    </Link>
-                  </li>
-                  <li className="w-full">
-                    <Link
-                      href="#"
-                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
-                    >
-                      Theater Art
-                    </Link>
-                  </li>
-                  <li className="w-full">
-                    <Link
-                      href="#"
-                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
-                    >
-                      Ceramics Art
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </ul>
-          </li>
-          <li className={`${styles.navbarItem} relative`}>
-            <Link
-              href="/collections"
-              className="text-lg font-medium px-5 py-2 text-[#1e1e1e] hover:text-[#9ea18e] transition-all ease-linear duration-100"
-            >
-              Collections
-            </Link>
-            <ul
-              className={`${styles.navbarMega} absolute top-10 flex items-start bg-white shadow-lg gap-5 z-10`}
-            >
-              <div className="px-6 py-4">
-                <ul className="flex flex-col items-start gap-2">
-                  <li className="w-full">
-                    <Link
-                      href="/collections/test"
-                      className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-[#9ea18e] transition-all ease-linear duration-100"
-                    >
-                      test
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </ul>
-          </li>
-          <li>
-            <Link
-              href="/aboutUs"
-              className="text-lg font-medium px-5 py-2 text-[#1e1e1e] hover:text-[#9ea18e] transition-all ease-linear duration-100"
-            >
-              About Us
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/contact"
-              className="text-lg font-medium px-5 py-2 text-[#1e1e1e] hover:text-[#9ea18e] transition-all ease-linear duration-100"
-            >
-              Contact
-            </Link>
-          </li>
-        </ul>
-
-        {/* navbar content on Tablet & Mobile */}
-        <ul
-          className={`${styles.navbarMobile} ${
-            showNavbar ? styles.show : ""
-          } lg:hidden block fixed top-0 bottom-0 left-0  px-6 py-4 md:w-1/2 w-full bg-white shadow-lg z-40`}
-        >
-          <div className="w-full mb-3">
-            {currentNav.length > 1 ? (
-              <BsArrowLeftShort
-                className="text-2xl cursor-pointer"
-                onClick={handleBack}
-              />
-            ) : (
-              <AiOutlineClose
-                className="text-2xl ml-auto cursor-pointer"
-                onClick={handleShowModal}
-              />
-            )}
-          </div>
-          {currentNav[currentNav.length - 1].map(
-            (item: INavItem, index: number) => (
-              <li
-                key={index}
-                className="flex items-center justify-between w-full"
+          {initItemDesktop.map((item: INavItem, index: number) => (
+            <li key={index} className={`${styles.navbarItem} relative`}>
+              <Link
+                href={item.path}
+                className={`text-lg font-medium px-5 py-2 text-[#1e1e1e] ${
+                  router.asPath === item.path ? "text-primary" : ""
+                } hover:text-primary transition-all ease-linear duration-100`}
               >
-                <Link
-                  href={item.path}
-                  className="block w-full text-lg font-medium py-2 text-[#1e1e1e] hover:text-[#9ea18e] transition-all ease-linear duration-100"
+                {item.name}
+              </Link>
+              {item?.megaMenu && (
+                <ul
+                  className={`${styles.navbarMega} absolute top-10 flex items-start bg-white shadow-lg gap-5 z-10`}
                 >
-                  {item.name}
-                </Link>
-                {item?.children && (
-                  <BsArrowRightShort
-                    className="text-3xl cursor-pointer"
-                    onClick={() => handleAddItem(item.children!)}
-                  />
-                )}
-              </li>
-            )
-          )}
+                  {item.megaMenu.map((item: IMegaItem, index: number) => (
+                    <div key={index} className="px-6 py-4">
+                      <Link
+                        href={"/"}
+                        className="block w-full text-lg font-normal text-[#1e1e1e] hover:text-primary whitespace-nowrap mb-2"
+                      >
+                        {item.title}
+                      </Link>
+                      <ul className="flex flex-col items-start gap-2">
+                        {item.items.map((item: INavItem, index: number) => (
+                          <li key={index} className="w-full">
+                            <Link
+                              href={item.path}
+                              className="w-full text-base font-normal text-[#1e1e1e] whitespace-nowrap hover:text-primary transition-all ease-linear duration-100"
+                            >
+                              {item.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                  {/* <img
+                  src="https://www.livingspaces.com/globalassets/images/nav/02_d_bedroom_0624.jpg"
+                  alt=""
+                  className="h-full "
+                /> */}
+                </ul>
+              )}
+            </li>
+          ))}
         </ul>
 
         <div className="flex items-center md:gap-4 gap-3">
@@ -477,13 +243,13 @@ const Navbar: FC = () => {
           </div>
           <div className="relative cursor-pointer">
             <AiOutlineHeart className="relative lg:text-3xl md:text-2xl text-xl z-0" />
-            <span className="flex items-center justify-center absolute -top-1 -right-2 md:w-5 md:h-5 w-4 h-4 text-xs text-white bg-[#9ea18e] rounded-full z-10">
+            <span className="flex items-center justify-center absolute -top-1 -right-2 md:w-5 md:h-5 w-4 h-4 text-xs text-white bg-primary rounded-full z-10">
               0
             </span>
           </div>
           <div className="relative cursor-pointer">
             <AiOutlineShoppingCart className="relative lg:text-3xl md:text-2xl text-xl z-0" />
-            <span className="flex items-center justify-center absolute -top-1 -right-2 md:w-5 md:h-5 w-4 h-4 text-xs text-white bg-[#9ea18e] rounded-full z-10">
+            <span className="flex items-center justify-center absolute -top-1 -right-2 md:w-5 md:h-5 w-4 h-4 text-xs text-white bg-primary rounded-full z-10">
               0
             </span>
           </div>

@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import React, { FC } from "react";
 import Footer from "~/components/Footer";
 
@@ -11,6 +12,9 @@ interface Props {
 }
 
 const DefaultLayout: FC<Props> = ({ children }: Props) => {
+  const router = useRouter();
+    
+    console.log(router)
   return (
     <main>
       <Navbar />
@@ -38,7 +42,7 @@ const DefaultLayout: FC<Props> = ({ children }: Props) => {
               placeholder="Your Email Address"
               className="h-11 sm:w-9/12 w-full bg-white px-5 py-2 outline-0"
             />
-            <button className="h-11 sm:w-3/12 w-1/2 px-5 text-white bg-[#9ea18e]">
+            <button className="h-11 sm:w-3/12 w-1/2 px-5 text-white bg-primary">
               Subscribe
             </button>
           </form>
