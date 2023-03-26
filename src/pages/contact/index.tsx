@@ -4,7 +4,7 @@ import Header from "~/components/Header";
 const Contact: FC = () => {
   return (
     <div>
-      <Header title={"Contact"} link={"/"}/> 
+      <Header title={"Contact"} listBackLinks={[{title: "Home", link: "/"}]}/> 
       <section className="my-16">
         <div className="container__cus flex lg:flex-nowrap flex-wrap items-start justify-between gap-5">
           <div

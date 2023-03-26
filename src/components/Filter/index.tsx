@@ -52,17 +52,21 @@ const FilterItem: FC<Props> = (props: Props) => {
   };
 
   const handleCheckedBox = (item: IFilterItem): boolean => {
+    if (
+      typeof query[item.paramFilter] === "string" &&
+      query[item.paramFilter] === item.valueFilter
+    ) {
+      return true;
+    }
 
-    if (typeof query[item.paramFilter] === "string" && query[item.paramFilter] === item.valueFilter ) {
-      return true
-    } 
-    
     if (typeof query[item.paramFilter] === "object") {
-        return query[item.paramFilter]?.map((value: any) => {
-            if(value === item.valueFilter) {
-                return true;
-            }
-        })
+      const value = query[item.paramFilter].find((value: any) => {
+        if (value === item.valueFilter) {
+          return value;
+        }
+      });
+
+      return value ? true : false;
     }
     return false;
   };
@@ -72,8 +76,8 @@ const FilterItem: FC<Props> = (props: Props) => {
     if (element) {
       element.style.height = 0 + "px";
     }
-    if(query.lte && query.gte && typeFilter === "price") {
-        setPrice({lte: query.lte, gte: query.gte});
+    if (query.lte && query.gte && typeFilter === "price") {
+      setPrice({ lte: query.lte, gte: query.gte });
     }
   }, []);
 

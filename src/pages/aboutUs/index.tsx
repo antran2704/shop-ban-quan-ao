@@ -7,7 +7,7 @@ import Header from "~/components/Header";
 const Contact: FC = () => {
   return (
     <div>
-      <Header title={"About Us"} link={"/"} />
+      <Header title={"About Us"} listBackLinks={[{title: "Home", link: "/"}]} />
       <section className="container__cus">
         <div className="flex lg:flex-nowrap flex-wrap items-center justify-between py-10 gap-10">
           <div className="lg:w-6/12 w-full">

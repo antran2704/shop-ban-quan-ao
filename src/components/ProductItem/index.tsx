@@ -6,7 +6,7 @@ const ProductItem: FC = () => {
   
   return (
     <div className="relative md:p-4 p-3 rounded-md border border-borderColor">
-      <Link href={"/"} className="w-ful">
+      <Link href={"/collections/test/product/test"} className="w-ful">
         <img
           src="/images/category-1.avif"
           alt="image category"
@@ -39,7 +39,7 @@ const ProductItem: FC = () => {
           Select option
         </Link>
       </button>
-      <span className="absolute top-2 left-2 text-xs font-medium py-0.5 px-2 bg-primary text-[#ffffff] rounded">
+      <span className="absolute top-2 left-2 text-xs font-medium py-0.5 px-2 bg-primary text-white rounded">
         -13%
       </span>
     </div>

@@ -19,7 +19,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
   const { query } = props;
   return (
     <div>
-      <Header title={"Collection item"} link={"/"} />
+      <Header title={"Collection item"} listBackLinks={[{title: "Home", link: "/"}]} />
       <div className="container__cus">
         <div className="flex lg:flex-nowrap flex-wrap items-start justify-between my-10 gap-10">
           <div className="lg:w-3/12 w-full">
