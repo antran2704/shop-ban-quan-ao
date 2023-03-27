@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
 import React, { FC } from "react";
 import Footer from "~/components/Footer";
 
@@ -12,9 +11,6 @@ interface Props {
 }
 
 const DefaultLayout: FC<Props> = ({ children }: Props) => {
-  const router = useRouter();
-    
-    console.log(router)
   return (
     <main>
       <Navbar />

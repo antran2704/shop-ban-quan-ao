@@ -6,7 +6,7 @@ const ProductItem: FC = () => {
   
   return (
     <div className="relative md:p-4 p-3 rounded-md border border-borderColor">
-      <Link href={"/collections/test/product/test"} className="w-ful">
+      <Link href={"/collections/product/test"} className="w-ful">
         <img
           src="/images/category-1.avif"
           alt="image category"

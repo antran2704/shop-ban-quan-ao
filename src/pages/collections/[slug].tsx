@@ -152,10 +152,10 @@ const CollectionItem: FC<Props> = (props: Props) => {
               Shop By Category
             </p>
             <div className="flex items-center gap-2">
-              <button className="category__btn-prev flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-[#9ea18e] rounded-full transition-all duration-100">
+              <button className="category__btn-prev flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-primary rounded-full transition-all duration-100">
                 <MdKeyboardArrowLeft className="text-3xl text-[#9ea18e] hover:text-white" />
               </button>
-              <button className="category__btn-next flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-[#9ea18e] rounded-full transition-all duration-100">
+              <button className="category__btn-next flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-primary rounded-full transition-all duration-100">
                 <MdKeyboardArrowRight className="text-3xl text-[#9ea18e] hover:text-white" />
               </button>
             </div>
@@ -194,7 +194,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>
@@ -212,7 +212,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>
@@ -230,7 +230,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>
@@ -248,7 +248,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>
@@ -266,7 +266,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>
@@ -284,7 +284,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>
@@ -302,7 +302,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>
@@ -320,7 +320,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>
@@ -338,7 +338,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>
@@ -356,7 +356,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>

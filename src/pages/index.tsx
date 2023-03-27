@@ -49,7 +49,7 @@ export default function Home() {
               <button className="banner__btn border-0">
                 <Link
                   href={"/"}
-                  className="flex items-center justify-center text-base text-medium text-white bg-[#9ea18e] hover:bg-[#1e1e1e] transition-all duration-100 ease-linear px-5 py-2 rounded-md"
+                  className="flex items-center justify-center text-base text-medium text-white bg-primary hover:bg-[#1e1e1e] transition-all duration-100 ease-linear px-5 py-2 rounded-md"
                 >
                   Shop Now
                 </Link>
@@ -70,7 +70,7 @@ export default function Home() {
               <button className="banner__btn border-0">
                 <Link
                   href={"/"}
-                  className="flex items-center justify-center text-base text-medium text-white bg-[#9ea18e] hover:bg-[#1e1e1e] transition-all duration-100 ease-linear px-5 py-2 rounded-md"
+                  className="flex items-center justify-center text-base text-medium text-white bg-primary hover:bg-[#1e1e1e] transition-all duration-100 ease-linear px-5 py-2 rounded-md"
                 >
                   Shop Now
                 </Link>
@@ -88,10 +88,10 @@ export default function Home() {
               Shop By Category
             </p>
             <div className="flex items-center gap-2">
-              <button className="category__btn-prev flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-[#9ea18e] rounded-full transition-all duration-100">
+              <button className="category__btn-prev flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-primary rounded-full transition-all duration-100">
                 <MdKeyboardArrowLeft className="text-3xl text-[#9ea18e] hover:text-white" />
               </button>
-              <button className="category__btn-next flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-[#9ea18e] rounded-full transition-all duration-100">
+              <button className="category__btn-next flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-primary rounded-full transition-all duration-100">
                 <MdKeyboardArrowRight className="text-3xl text-[#9ea18e] hover:text-white" />
               </button>
             </div>
@@ -130,7 +130,7 @@ export default function Home() {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>
@@ -148,7 +148,7 @@ export default function Home() {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>
@@ -166,7 +166,7 @@ export default function Home() {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>
@@ -184,7 +184,7 @@ export default function Home() {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>
@@ -202,7 +202,7 @@ export default function Home() {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>
@@ -220,7 +220,7 @@ export default function Home() {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>
@@ -238,7 +238,7 @@ export default function Home() {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>
@@ -256,7 +256,7 @@ export default function Home() {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>
@@ -274,7 +274,7 @@ export default function Home() {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>
@@ -292,7 +292,7 @@ export default function Home() {
                 </p>
                 <a
                   href="#"
-                  className="block w-full text-sm font-medium text-[#9ea18e] text-center hover:underline"
+                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
                 >
                   View more
                 </a>
@@ -308,10 +308,10 @@ export default function Home() {
           <div className="flex items-center justify-between mb-6">
             <p className="text-xl font-normal text-[#1e1e1e]">Best Seller</p>
             <div className="flex items-center gap-2">
-              <button className="trending__btn-prev flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-[#9ea18e] rounded-full transition-all duration-100">
+              <button className="trending__btn-prev flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-primary rounded-full transition-all duration-100">
                 <MdKeyboardArrowLeft className="text-3xl text-[#9ea18e] hover:text-white" />
               </button>
-              <button className="trending__btn-next flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-[#9ea18e] rounded-full transition-all duration-100">
+              <button className="trending__btn-next flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-primary rounded-full transition-all duration-100">
                 <MdKeyboardArrowRight className="text-3xl text-[#9ea18e] hover:text-white" />
               </button>
             </div>
