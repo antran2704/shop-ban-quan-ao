@@ -2,8 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+// scroll
+@mixin scroll() {
+  &::-webkit-scrollbar {
+    background-color: transparent;
+    width: 2px;
+    height: 2px;
+    overflow: overlay;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    overflow: overlay;
+  }
+}
+
+@mixin scrollHidden() {
+  &::-webkit-scrollbar {
+    background-color: transparent;
+    width: 1px;
+    height: 1px;
+    overflow: overlay;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 10px;
+    overflow: overlay;
+  }
+}
+
 body {
   overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .container__cus {
@@ -154,4 +186,13 @@ input[type="checkbox"]:checked:after {
     position: relative;
     margin-top: 20px;
   }
+}
+
+// product
+.product__tags {
+  @include scrollHidden;
+}
+
+.list__modal-cart {
+  @include scrollHidden;
 }

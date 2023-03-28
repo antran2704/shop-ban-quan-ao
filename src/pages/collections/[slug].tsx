@@ -14,6 +14,8 @@ interface Props {
   query: any;
 }
 
+const sizes: string[] = ["S", "M", "L", "XL"];
+
 const CollectionItem: FC<Props> = (props: Props) => {
   const btnSubmitFilterRef = useRef<HTMLButtonElement>(null);
   const { query } = props;

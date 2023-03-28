@@ -1,13 +1,18 @@
 import { GetServerSideProps } from "next";
 import Link from "next/link";
-import { useRef, FC, MouseEvent, useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useRef, FC, useEffect, useState, MouseEvent } from "react";
 // gallery
 import LightGallery from "lightgallery/react";
 import lgThumbnail from "lightgallery/plugins/thumbnail";
 import lgZoom from "lightgallery/plugins/zoom";
 import { Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { AiOutlineShoppingCart } from "react-icons/ai";
+import {
+  AiOutlineShoppingCart,
+  AiOutlineClose,
+  AiFillCheckCircle,
+} from "react-icons/ai";
 import {
   MdKeyboardArrowLeft,
   MdKeyboardArrowRight,
@@ -15,6 +20,17 @@ import {
 } from "react-icons/md";
 
 import Header from "~/components/Header";
+import ProductQuantity from "~/components/ProductQuantity";
+
+interface IInforProduct {
+  name: string;
+  slug: string;
+  count: number;
+  price: number;
+  avatarProduct: string;
+  size?: string | undefined;
+  color?: string | undefined;
+}
 
 interface Props {
   query: any;
@@ -35,19 +51,19 @@ const listImages: string[] = [
 
 const CollectionItem: FC<Props> = (props: Props) => {
   const { query } = props;
+  const router = useRouter();
 
   const firstRef = useRef<HTMLButtonElement>(null);
   const lineRef = useRef<HTMLSpanElement>(null);
 
+  const [showPopup, setShow] = useState<boolean>(false);
   const [totalProduct, setTotalProduct] = useState<number>(1);
   const [currentImage, setCurrentImage] = useState<string>(listImages[0]);
   const [currentTag, setCurrentTag] = useState<string>("");
-
-  const handleDecreaseTotal = (): void => {
-    if (totalProduct > 1) {
-      setTotalProduct(totalProduct - 1);
-    }
-  };
+  const [message, setMessage] = useState({
+    messageSize: "",
+    messageColor: "",
+  });
 
   const handleChangeImage = (e: MouseEvent<HTMLImageElement>) => {
     setCurrentImage(e.currentTarget.src);
@@ -61,6 +77,47 @@ const CollectionItem: FC<Props> = (props: Props) => {
       lineEl.style.width = width + "px";
       lineEl.style.left = offSetLeft + "px";
       setCurrentTag(e.currentTarget.name);
+    }
+  };
+
+  const hanldeAddCart = () => {
+    if (!query.size) {
+      setMessage({ ...message, messageSize: "Please choose your size!!!" });
+    }
+    // if(!query.color) {
+    //   setMessage({...message, messageColor: "Please choose your color!!!"});
+    // }
+    else {
+      let exitIndex = 0;
+      const dataProduct: IInforProduct = {
+        name: "X. Complementary Product 2",
+        slug: router.asPath,
+        count: totalProduct,
+        price: 29.0,
+        size: query.size || undefined,
+        color: query.color || undefined,
+        avatarProduct: listImages[0],
+      };
+      const listCarted = JSON.parse(localStorage.getItem("listCart") || "[]");
+      const exitItem = listCarted.find((item: IInforProduct, index: number) => {
+        if (item.name === dataProduct.name && item.slug === dataProduct.slug) {
+          exitIndex = index;
+          return item;
+        }
+      });
+
+      if (exitItem) {
+        listCarted[exitIndex] = {
+          ...exitItem,
+          count: exitItem.count + dataProduct.count,
+        };
+        localStorage.setItem("listCart", JSON.stringify(listCarted));
+        setShow(true);
+      } else {
+        listCarted.push(dataProduct);
+        localStorage.setItem("listCart", JSON.stringify(listCarted));
+        setShow(true);
+      }
     }
   };
 
@@ -149,7 +206,16 @@ const CollectionItem: FC<Props> = (props: Props) => {
               <h3 className="text-2xl font-medium">
                 X. Complementary Product 2
               </h3>
-              <h2 className="text-3xl font-medium my-3">$29.00</h2>
+              {/* price */}
+              <div className="flex flex-wrap items-end my-3 gap-3">
+                <h3 className="text-2xl font-medium text-[#6a7779] line-through">
+                  $60.00
+                </h3>
+                <h2 className="text-3xl font-medium">$29.00</h2>
+                <span className="text-sm font-medium text-white px-2 py-0.5 bg-primary rounded-md">
+                  Save -35%
+                </span>
+              </div>
               <p className="text-base text-[#071c1f]">
                 The European languages are members of the same family. Their
                 separate existence is a myth. For science, music, sport, etc,
@@ -183,7 +249,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
                   Size:
                 </span>
                 <form className="flex flex-wrap items-center gap-2">
-                  {sizes.map((size: string, index: number) => (
+                  {sizes?.map((size: string, index: number) => (
                     <input
                       key={index}
                       type="submit"
@@ -194,57 +260,34 @@ const CollectionItem: FC<Props> = (props: Props) => {
                       } hover:bg-primary border border-borderColor transition-all ease-linear duration-100 cursor-pointer`}
                     />
                   ))}
-                  {/* <button className="text-sm px-4 py-0.5 font-medium hover:text-white hover:bg-primary border border-borderColor transition-all ease-linear duration-100">
-                    S
-                  </button>
-                  <button className="text-sm px-4 py-0.5 font-medium hover:text-white hover:bg-primary border border-borderColor transition-all ease-linear duration-100">
-                    M
-                  </button>
-                  <button className="text-sm px-4 py-0.5 font-medium hover:text-white hover:bg-primary border border-borderColor transition-all ease-linear duration-100">
-                    L
-                  </button>
-                  <button className="text-sm px-4 py-0.5 font-medium hover:text-white hover:bg-primary border border-borderColor transition-all ease-linear duration-100">
-                    XXL
-                  </button> */}
                 </form>
               </div>
+              <p className="text-lg text-primary font-medium mt-3">
+                {message.messageSize}
+              </p>
             </div>
             <div className="pb-5 mb-5 border-b border-borderColor">
               <div className="flex flex-wrap items-center gap-3">
-                <div className="flex items-center lg:w-3/12 w-6/12 h-14">
-                  <button
-                    onClick={handleDecreaseTotal}
-                    className="flex items-center justify-center text-xl font-medium w-4/12 h-full border border-borderColor"
-                  >
-                    -
-                  </button>
-                  <button className="flex items-center justify-center text-base font-medium w-4/12 h-full border border-borderColor">
-                    {totalProduct}
-                  </button>
-                  <button
-                    onClick={() => setTotalProduct(totalProduct + 1)}
-                    className="flex items-center justify-center text-xl font-medium w-4/12 h-full border border-borderColor"
-                  >
-                    +
-                  </button>
+                <div className="lg:w-3/12 w-6/12">
+                  <ProductQuantity
+                    totalProduct={totalProduct}
+                    setTotalProduct={setTotalProduct}
+                  />
                 </div>
                 <div className="lg:w-8/12 sm:flex-nowrap flex-wrap w-full flex items-center h-14 gap-3">
                   <button className="sm:w-6/12 w-full h-full">
-                    <Link
-                      className="flex items-center justify-center w-full h-full text-base font-medium text-white bg-primary px-4 gap-2 transition-all ease-linear duration-100"
-                      href={"/"}
+                    <p
+                      className="flex items-center justify-center w-full h-full text-base font-medium text-white hover:text-dark bg-primary hover:bg-white px-4 gap-2 border border-primary hover:border-dark transition-all ease-linear duration-100"
+                      onClick={hanldeAddCart}
                     >
                       <AiOutlineShoppingCart className="text-2xl" />
                       Add to cart
-                    </Link>
+                    </p>
                   </button>
                   <button className="sm:w-6/12 w-full h-full">
-                    <Link
-                      className="flex items-center justify-center w-full h-full text-base font-medium text-white bg-dark hover:bg-primary px-4 transition-all ease-linear duration-100 gap-2"
-                      href={"/"}
-                    >
+                    <p className="flex items-center justify-center w-full h-full text-base font-medium text-white bg-dark hover:bg-primary px-4 transition-all ease-linear duration-100 gap-2">
                       Buy it now
-                    </Link>
+                    </p>
                   </button>
                 </div>
               </div>
@@ -255,7 +298,9 @@ const CollectionItem: FC<Props> = (props: Props) => {
 
       <section className="container__cus">
         <div className="my-10">
-          <div className="relative flex items-center border-b-2 border-borderColor overflow-x-auto gap-10">
+          <div
+            className={`product__tags relative flex items-center border-b-2 border-borderColor sm:overflow-x-visible overflow-x-scroll gap-10`}
+          >
             {tags.map((tag: string, index: number) => (
               <button
                 key={index}
@@ -596,6 +641,47 @@ const CollectionItem: FC<Props> = (props: Props) => {
           </div>
         </div>
       </section>
+
+      {/* popups */}
+      {showPopup && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 z-30">
+          <div
+            className="abosulte w-full h-full z-10"
+            style={{ backgroundColor: "rgba(1, 1, 1, 0.6)" }}
+            onClick={() => setShow(false)}
+          ></div>
+          <div
+            className="absolute top-[50%] left-[50%] py-6 px-8 min-w-[500px] bg-white shadow-sm rounded-md z-20"
+            style={{ transform: "translate(-50%, -50%)" }}
+          >
+            <AiOutlineClose className="text-2xl ml-auto mb-2 cursor-pointer" onClick={() => setShow(false)}/>
+            <div className="flex items-center gap-5">
+              <img
+                src={listImages[0]}
+                alt="image"
+                className="w-[100px] h-100px"
+              />
+              <div>
+                <h2 className="text-lg font-medium">
+                  X. Complementary Product 2
+                </h2>
+                <p className="flex items-center text-lg">
+                  <AiFillCheckCircle className="text-xl text-[#28a745]" />
+                  Successfully added to your Cart
+                </p>
+                <div className="flex items-center mt-5 gap-5">
+                  <button className="flex items-center justify-center text-sm font-medium text-white hover:text-dark bg-primary hover:bg-white px-4 py-2 gap-2 border border-primary hover:border-dark transition-all ease-linear duration-100">
+                    View cart
+                  </button>
+                  <button className="flex items-center justify-center text-sm font-medium text-white bg-dark hover:bg-primary px-4 py-2 transition-all ease-linear border border-transparent duration-100 gap-2">
+                    Check out
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
