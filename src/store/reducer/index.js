@@ -1,4 +1,4 @@
-import { GET_LIST_CARTS, DELETE_ITEM_IN_CART } from "../types";
+import { GET_LIST_CARTS } from "../types";
 
 const initialState = {
   listCarts: [],
@@ -14,12 +14,6 @@ const rootReducer = (state = initialState, action) => {
         listCarts: action.payload.listCarts,
         totalCart: action.payload.totalCart,
         totalPrice: action.payload.totalPrice,
-      };
-
-    case DELETE_ITEM_IN_CART:
-      return {
-        ...state,
-        listCarts: action.payload,
       };
 
     default:

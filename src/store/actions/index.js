@@ -1,4 +1,4 @@
-import { GET_LIST_CARTS, DELETE_ITEM_IN_CART } from "../types";
+import { GET_LIST_CARTS } from "../types";
 
 export const handleGetListCart = (dispatch) => {
   const listCarts = JSON.parse(localStorage.getItem("listCart"));
@@ -27,3 +27,9 @@ export const handleDeleteProductInCart = (listCarts, index) => {
   }
   localStorage.setItem("listCart", JSON.stringify(listCarts));
 };
+
+export const handleClearCarts = (dispatch) => {
+  const newListCarts = [];
+  localStorage.setItem("listCart", JSON.stringify(newListCarts));
+  handleGetListCart(dispatch);
+}
