@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-
 import React, { useState, useEffect, FC } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   AiOutlineSearch,
   AiOutlineHeart,
   AiOutlineShoppingCart,
   AiOutlineClose,
-  AiFillCloseCircle
+  AiFillCloseCircle,
 } from "react-icons/ai";
 import { BsArrowRightShort, BsArrowLeftShort } from "react-icons/bs";
 import { HiMenu } from "react-icons/hi";
@@ -16,24 +16,22 @@ import { initItemDesktop, initItemMobile } from "./index";
 import { IMegaItem, INavItem } from "./interface";
 
 import useClientY from "~/hooks/useClientY";
+import { IInforProduct } from "~/interfaces";
+
+import { handleDeleteProductInCart, handleGetListCart } from "~/store/actions";
 
 import styles from "./Navbar.module.scss";
 
-interface IInforProduct {
-  name: string;
-  slug: string;
-  count: number;
-  price: number;
-  avatarProduct: string;
-  size?: string | undefined;
-  color?: string | undefined;
-}
-
 const Navbar: FC = () => {
+  const dispatch = useDispatch();
+  const { listCarts, totalCart, totalPrice } = useSelector(
+    (state: any) => state.data
+  );
+
   const router = useRouter();
   const top = useClientY();
 
-  const [totalCart, setTotalCart] = useState<number>(0);
+  // const [totalCart, setTotalCart] = useState<number>(0);
   const [showNavbar, setShow] = useState<boolean>(false);
   const [showModalCart, setShowModalCart] = useState<boolean>(false);
   const [currentNav, setCurrentNav] = useState([initItemMobile]);
@@ -55,12 +53,8 @@ const Navbar: FC = () => {
   };
 
   useEffect(() => {
-    const listCart = JSON.parse(localStorage.getItem("listCart") || "[]");
-    const total = listCart.reduce((total: number, item: IInforProduct) => {
-      return (total += item.count);
-    }, 0);
-    setTotalCart(total);
-  }, []);
+    setShowModalCart(false);
+  }, [router.pathname]);
 
   return (
     <header>
@@ -184,7 +178,10 @@ const Navbar: FC = () => {
               0
             </span>
           </div>
-          <div className="relative cursor-pointer" onClick={() => setShowModalCart(true)}>
+          <div
+            className="relative cursor-pointer"
+            onClick={() => setShowModalCart(true)}
+          >
             <AiOutlineShoppingCart className="relative lg:text-3xl md:text-2xl text-xl z-0" />
             <span className="flex items-center justify-center absolute -top-1 -right-2 md:w-5 md:h-5 w-4 h-4 text-xs text-white bg-primary rounded-full z-10">
               {totalCart < 100 ? totalCart : "99"}
@@ -268,7 +265,10 @@ const Navbar: FC = () => {
               0
             </span>
           </div>
-          <div className="relative cursor-pointer" onClick={() => setShowModalCart(true)}>
+          <div
+            className="relative cursor-pointer"
+            onClick={() => setShowModalCart(true)}
+          >
             <AiOutlineShoppingCart className="relative lg:text-3xl md:text-2xl text-xl z-0" />
             <span className="flex items-center justify-center absolute -top-1 -right-2 md:w-5 md:h-5 w-4 h-4 text-xs text-white bg-primary rounded-full z-10">
               {totalCart < 100 ? totalCart : "99"}
@@ -287,46 +287,79 @@ const Navbar: FC = () => {
       ></div>
 
       {/* modal cart */}
-      <div className={`${styles.modalCart} ${showModalCart ? styles.show : ''} fixed top-0 bottom-0 left-0 right-0 z-30`}>
+      <div
+        className={`${styles.modalCart} ${
+          showModalCart ? styles.show : ""
+        } fixed top-0 bottom-0 left-0 right-0 z-30`}
+      >
         <div
           className={`${styles.modalCartLayout} abosulte w-full h-full z-10`}
           style={{ backgroundColor: "rgba(1, 1, 1, 0.6)" }}
           onClick={() => setShowModalCart(false)}
         ></div>
-        <div className={`${styles.modalCartContent} absolute flex flex-col items-start h-full top-0 py-6 px-8 sm:w-[400px] w-full bg-white shadow-sm rounded-l-md z-20 gap-5`}>
+        <div
+          className={`${styles.modalCartContent} absolute flex flex-col items-start h-full top-0 py-6 px-8 sm:w-[400px] w-full bg-white shadow-sm rounded-l-md z-20 gap-5`}
+        >
           <div className="flex w-full items-center justify-between pb-3 border-b border-borderColor gap-10">
             <p className="text-base font-medium">Cart</p>
-            <AiOutlineClose className="text-xl ml-auto mb-2 cursor-pointer" onClick={() => setShowModalCart(false)}/>
+            <AiOutlineClose
+              className="text-xl ml-auto mb-2 cursor-pointer"
+              onClick={() => setShowModalCart(false)}
+            />
           </div>
           <ul className="list__modal-cart w-full h-[80vh] pb-3 border-b border-borderColor gap-5 overflow-y-auto">
-            <li className="flex items-center pb-3 px-2 border-b border-borderColor gap-4">
-              <div className="relative w-3/12 h-20">
-                <img
-                  src="/images/product/product2.webp"
-                  className="w-full h-full"
-                  alt="img"
-                />
-                <AiFillCloseCircle className="absolute -top-0.5 -left-1 text-2xl hover:text-primary cursor-pointer"/>
-              </div>
-              <div className="w-8/12">
-                <Link
-                  href={"#"}
-                  className="text-base font-medium hover:text-primary"
-                >
-                  X. Complementary Product 2 - Cream X. 
-                </Link>
-                <p className="text-base mt-2">18 X $29.00</p>
-              </div>
-            </li>
+            {listCarts.map((item: IInforProduct, index: number) => (
+              <li
+                key={index}
+                className="flex items-center pb-3 px-2 border-b border-borderColor gap-4"
+              >
+                <div className="relative w-3/12 h-20">
+                  <img
+                    src={item.avatarProduct}
+                    className="w-full h-full"
+                    alt="img"
+                  />
+                  <AiFillCloseCircle
+                    onClick={() => {
+                      handleDeleteProductInCart(listCarts, index);
+                      handleGetListCart(dispatch);
+                    }}
+                    className="absolute -top-0.5 -left-1 text-2xl hover:text-primary cursor-pointer"
+                  />
+                </div>
+                <div className="w-8/12">
+                  <Link
+                    href={item.slug}
+                    className="text-base font-medium hover:text-primary"
+                  >
+                    {item.name}
+                  </Link>
+                  <div className="flex items-center gap-2">
+                    {item.size && (
+                      <span className="text-sm">Size: {item.size}</span>
+                    )}
+                    {item.color && (
+                      <span className="text-sm">Color: {item.color}</span>
+                    )}
+                  </div>
+                  <p className="text-base mt-2">
+                    {item.count} X ${item.price}.00
+                  </p>
+                </div>
+              </li>
+            ))}
           </ul>
-          <div className="flex w-full items-center pb-3 border-b border-borderColor gap-3">
+          <div className="flex w-full items-center justify-between pb-3 gap-3">
             <p className="text-lg font-medium">Subtotal:</p>
-            <p className="text-lg text-primary font-medium">$1,146.00</p>
+            <p className="text-lg text-primary font-medium">${totalPrice}.00</p>
           </div>
           <div className="flex sm:flex-nowrap flex-wrap justify-between items-center w-full pb-3 border-b border-borderColor gap-2">
-            <button className="flex items-center justify-center sm:w-auto w-full text-lg font-medium text-white whitespace-nowrap hover:text-dark bg-primary hover:bg-white px-8 py-2 gap-2 border border-primary hover:border-dark transition-all ease-linear duration-100">
+            <Link
+              href={"/cart"}
+              className="flex items-center justify-center sm:w-auto w-full text-lg font-medium text-white whitespace-nowrap hover:text-dark bg-primary hover:bg-white px-8 py-2 gap-2 border border-primary hover:border-dark transition-all ease-linear duration-100"
+            >
               View cart
-            </button>
+            </Link>
             <button className="flex items-center justify-center sm:w-auto w-full text-lg font-medium text-white whitespace-nowrap bg-dark hover:bg-primary px-8 py-2 transition-all ease-linear border border-transparent duration-100 gap-2">
               Check out
             </button>

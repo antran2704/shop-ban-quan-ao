@@ -2,6 +2,7 @@ import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useRef, FC, useEffect, useState, MouseEvent } from "react";
+import { useDispatch } from "react-redux";
 // gallery
 import LightGallery from "lightgallery/react";
 import lgThumbnail from "lightgallery/plugins/thumbnail";
@@ -21,16 +22,8 @@ import {
 
 import Header from "~/components/Header";
 import ProductQuantity from "~/components/ProductQuantity";
-
-interface IInforProduct {
-  name: string;
-  slug: string;
-  count: number;
-  price: number;
-  avatarProduct: string;
-  size?: string | undefined;
-  color?: string | undefined;
-}
+import { IInforProduct } from "~/interfaces";
+import { handleGetListCart } from "~/store/actions";
 
 interface Props {
   query: any;
@@ -52,6 +45,8 @@ const listImages: string[] = [
 const CollectionItem: FC<Props> = (props: Props) => {
   const { query } = props;
   const router = useRouter();
+
+  const dispatch = useDispatch();
 
   const firstRef = useRef<HTMLButtonElement>(null);
   const lineRef = useRef<HTMLSpanElement>(null);
@@ -118,6 +113,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
         localStorage.setItem("listCart", JSON.stringify(listCarted));
         setShow(true);
       }
+      handleGetListCart(dispatch);
     }
   };
 
@@ -654,7 +650,10 @@ const CollectionItem: FC<Props> = (props: Props) => {
             className="absolute top-[50%] left-[50%] py-6 px-8 min-w-[500px] bg-white shadow-sm rounded-md z-20"
             style={{ transform: "translate(-50%, -50%)" }}
           >
-            <AiOutlineClose className="text-2xl ml-auto mb-2 cursor-pointer" onClick={() => setShow(false)}/>
+            <AiOutlineClose
+              className="text-2xl ml-auto mb-2 cursor-pointer"
+              onClick={() => setShow(false)}
+            />
             <div className="flex items-center gap-5">
               <img
                 src={listImages[0]}
@@ -670,9 +669,12 @@ const CollectionItem: FC<Props> = (props: Props) => {
                   Successfully added to your Cart
                 </p>
                 <div className="flex items-center mt-5 gap-5">
-                  <button className="flex items-center justify-center text-sm font-medium text-white hover:text-dark bg-primary hover:bg-white px-4 py-2 gap-2 border border-primary hover:border-dark transition-all ease-linear duration-100">
+                  <Link
+                    href={"/cart"}
+                    className="flex items-center justify-center text-sm font-medium text-white hover:text-dark bg-primary hover:bg-white px-4 py-2 gap-2 border border-primary hover:border-dark transition-all ease-linear duration-100"
+                  >
                     View cart
-                  </button>
+                  </Link>
                   <button className="flex items-center justify-center text-sm font-medium text-white bg-dark hover:bg-primary px-4 py-2 transition-all ease-linear border border-transparent duration-100 gap-2">
                     Check out
                   </button>
