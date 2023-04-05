@@ -4,7 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { AiOutlineClose } from "react-icons/ai";
 
 import { IInforProduct } from "~/interfaces";
-import { handleDeleteProductInCart, handleGetListCart } from "~/store/actions";
+import { RootState } from "~/store";
+import { handleDeleteProductInCart, GetListCart } from "~/store/actions";
 
 import ProductQuantity from "~/components/ProductQuantity";
 
@@ -17,22 +18,23 @@ const CartItem: FC<Props> = (props: Props) => {
   const { data, index } = props;
 
   const dispatch = useDispatch();
-  const { listCarts } = useSelector((state: any) => state.data);
+  const { listCarts } = useSelector((state: RootState) => state.data);
 
   const [totalProduct, setTotalProduct] = useState<number>(data.count);
 
   const handleDeleteItemCart = () => {
     handleDeleteProductInCart(listCarts, index);
-    handleGetListCart(dispatch);
+    dispatch(GetListCart());
   };
 
   useEffect(() => {
-    listCarts[index] = {
+    const currentListCarts = [...listCarts];
+    currentListCarts[index] = {
       ...data,
       count: totalProduct,
     };
-    localStorage.setItem("listCart", JSON.stringify(listCarts));
-    handleGetListCart(dispatch);
+    localStorage.setItem("listCart", JSON.stringify(currentListCarts));
+    dispatch(GetListCart());
   }, [totalProduct]);
   return (
     <li className="flex lg:flex-row flex-col items-center justify-between w-full lg:pb-5 p-5 border border-borderColor gap-5">
@@ -62,7 +64,10 @@ const CartItem: FC<Props> = (props: Props) => {
         ${totalProduct * data.price}.00
       </p>
       <div className="flex items-center justify-center lg:w-1/12 w-full">
-        <AiOutlineClose className="text-xl cursor-pointer" onClick={handleDeleteItemCart}/>
+        <AiOutlineClose
+          className="text-xl cursor-pointer"
+          onClick={handleDeleteItemCart}
+        />
       </div>
     </li>
   );

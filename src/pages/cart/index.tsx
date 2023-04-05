@@ -11,11 +11,13 @@ import {
 import { IInforProduct } from "~/interfaces";
 import Header from "~/components/Header";
 import CartItem from "~/components/CartItem";
-import { handleClearCarts } from "~/store/actions";
+
+import { RootState } from "~/store";
+import { ClearCarts } from "~/store/actions";
 
 const Cart: FC = () => {
   const dispatch = useDispatch();
-  const { listCarts, totalPrice } = useSelector((state: any) => state.data);
+  const { listCarts, totalPrice } = useSelector((state: RootState) => state.data);
   return (
     <div>
       <Header title={"Cart"} listBackLinks={[{ title: "Home", link: "/" }]} />
@@ -31,7 +33,7 @@ const Cart: FC = () => {
             <div className="flex lg:flex-nowrap flex-wrap items-start justify-between gap-5">
               <div className="lg:w-4/12 w-full">
                 <button
-                  onClick={() => handleClearCarts(dispatch)}
+                  onClick={() => dispatch(ClearCarts())}
                   className="flex items-center justify-center sm:w-auto w-full text-lg font-medium text-white whitespace-nowrap hover:text-dark bg-primary hover:bg-white px-8 py-2 gap-2 border border-primary hover:border-dark transition-all ease-linear duration-100"
                 >
                   Clear cart
@@ -56,7 +58,7 @@ const Cart: FC = () => {
                   </tbody>
                 </table>
                 <button
-                  onClick={() => handleClearCarts(dispatch)}
+                  onClick={() => dispatch(ClearCarts())}
                   className="flex items-center justify-center w-full text-lg font-medium text-white whitespace-nowrap hover:text-dark bg-primary hover:bg-white px-8 py-3 mt-4 gap-2 border border-primary hover:border-dark transition-all ease-linear duration-100"
                 >
                   Proceed to Checkout

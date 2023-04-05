@@ -23,7 +23,7 @@ import {
 import Header from "~/components/Header";
 import ProductQuantity from "~/components/ProductQuantity";
 import { IInforProduct } from "~/interfaces";
-import { handleGetListCart } from "~/store/actions";
+import { GetListCart } from "~/store/actions";
 
 interface Props {
   query: any;
@@ -79,8 +79,8 @@ const CollectionItem: FC<Props> = (props: Props) => {
     if (!query.size) {
       setMessage({ ...message, messageSize: "Please choose your size!!!" });
     }
-    // if(!query.color) {
-    //   setMessage({...message, messageColor: "Please choose your color!!!"});
+    // if (!query.color) {
+    //   setMessage({ ...message, messageColor: "Please choose your color!!!" });
     // }
     else {
       let exitIndex = 0;
@@ -113,7 +113,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
         localStorage.setItem("listCart", JSON.stringify(listCarted));
         setShow(true);
       }
-      handleGetListCart(dispatch);
+      dispatch(GetListCart());
     }
   };
 

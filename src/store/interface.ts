@@ -1,6 +1,7 @@
-export interface IInitialState {}
+import { IInforProduct } from "~/interfaces";
 
-export interface IAction {
-  payload: any;
-  type: string;
+export interface IInitialState {
+  listCarts: IInforProduct[];
+  totalCart: number;
+  totalPrice: number;
 }

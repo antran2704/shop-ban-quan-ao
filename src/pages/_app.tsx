@@ -1,7 +1,7 @@
 import type { AppProps } from "next/app";
 import { useEffect } from "react";
 import { Provider } from "react-redux";
-import store from "~/store/index.js";
+import store from "~/store/index.ts";
 
 import DefaultLayout from "~/layouts/DefaultLayout";
 import "swiper/scss";

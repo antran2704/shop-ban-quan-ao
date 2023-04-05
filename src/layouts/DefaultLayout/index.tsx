@@ -3,7 +3,7 @@ import React, { FC, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import Footer from "~/components/Footer";
-import { handleGetListCart } from "~/store/actions";
+import { GetListCart } from "~/store/actions";
 
 const Navbar = dynamic(() => import("~/components/Navbar/Navbar"), {
   ssr: false,
@@ -15,9 +15,9 @@ interface Props {
 
 const DefaultLayout: FC<Props> = ({ children }: Props) => {
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
-    handleGetListCart(dispatch);
+    dispatch(GetListCart());
   }, []);
   return (
     <main>

@@ -18,14 +18,15 @@ import { IMegaItem, INavItem } from "./interface";
 import useClientY from "~/hooks/useClientY";
 import { IInforProduct } from "~/interfaces";
 
-import { handleDeleteProductInCart, handleGetListCart } from "~/store/actions";
+import { RootState } from "~/store";
+import { GetListCart, handleDeleteProductInCart } from "~/store/actions";
 
 import styles from "./Navbar.module.scss";
 
 const Navbar: FC = () => {
   const dispatch = useDispatch();
   const { listCarts, totalCart, totalPrice } = useSelector(
-    (state: any) => state.data
+    (state: RootState) => state.data
   );
 
   const router = useRouter();
@@ -322,7 +323,7 @@ const Navbar: FC = () => {
                   <AiFillCloseCircle
                     onClick={() => {
                       handleDeleteProductInCart(listCarts, index);
-                      handleGetListCart(dispatch);
+                      dispatch(GetListCart())
                     }}
                     className="absolute -top-0.5 -left-1 text-2xl hover:text-primary cursor-pointer"
                   />
