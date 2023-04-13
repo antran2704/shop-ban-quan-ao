@@ -21,7 +21,38 @@ export interface ICategory {
   filters: IFilterCategory[];
 }
 
+export interface IProduct {
+  name: string;
+  category: string;
+  shortDescription: string;
+  description: string;
+  price: number;
+  promotionPrice: number;
+  thumbnail: string;
+  listImages: string[];
+  hotProduct: boolean;
+  quantity: number;
+  sold: number;
+  outOfStock: boolean;
+  viewer: number;
+  stars: number;
+  brand: string;
+  listSizes: [
+    {
+      value: string;
+      outOfStock: boolean;
+    }
+  ];
+  listColors: [
+    {
+      value: string;
+      outOfStock: boolean;
+    }
+  ];
+  slug: string;
+}
+
 export interface ICategoryPayload {
-    status: number;
-    payload: ICategory[];
+  status: number;
+  payload: ICategory[];
 }

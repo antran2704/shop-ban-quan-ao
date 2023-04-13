@@ -19,7 +19,6 @@ const Home: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { categories } = useSelector((state: RootState) => state.data);
 
-  console.log(categories);
   useEffect(() => {
     const getCategories = async () => {
       try {
@@ -210,7 +209,7 @@ const Home: FC = () => {
             }}
           >
             <SwiperSlide>
-              <ProductItem />
+              {/* <ProductItem /> */}
             </SwiperSlide>
           </Swiper>
         </div>

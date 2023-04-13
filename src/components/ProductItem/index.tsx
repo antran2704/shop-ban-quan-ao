@@ -1,35 +1,55 @@
 import Link from "next/link";
-import { FC } from "react";
+import { FC, Fragment } from "react";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
+import { IProduct } from "~/interfaces/apiResponse";
 
-const ProductItem: FC = () => {
-  
+interface Props {
+  productData: IProduct;
+}
+
+const ProductItem: FC<Props> = (props: Props) => {
+  const { productData } = props;
   return (
     <div className="relative md:p-4 p-3 rounded-md border border-borderColor">
-      <Link href={"/collections/product/test"} className="w-ful">
+      <Link href={`/collections/product/${productData.slug}`} className="w-ful">
         <img
-          src="/images/category-1.avif"
+          src={productData.thumbnail}
           alt="image category"
           className="w-full rounded-xl"
         />
       </Link>
       <p className="md:text-base text-sm font-normal text-[#1e1e1e] text-start mt-3 truncate">
-        Chinese Style Black Iron Table Lamp
+        {productData.name}
       </p>
       <div className="flex items-center my-1">
-        <AiFillStar className="text-sm text-[#ffc30e]" />
-        <AiFillStar className="text-sm text-[#ffc30e]" />
-        <AiFillStar className="text-sm text-[#ffc30e]" />
-        <AiFillStar className="text-sm text-[#ffc30e]" />
-        <AiFillStar className="text-sm text-[#ffc30e]" />
+        {[...new Array(Math.floor(productData.stars))].map(
+          (item, index: number) => (
+            <AiFillStar key={index} className="text-sm text-[#ffc30e]" />
+          )
+        )}
+        {[...new Array(5 - Math.floor(productData.stars))].map(
+          (item, index: number) => (
+            <AiFillStar key={index} className="text-sm text-[#dadada]" />
+          )
+        )}
       </div>
       <div className="flex items-center gap-2">
-        <span className="inline-block md:text-base sm:text-sm text-xs text-[#1e1e1e]">
-          $250.00
-        </span>
-        <span className="inline-block md:text-base sm:text-sm text-xs text-[#666] line-through">
-          $290.00
-        </span>
+        {productData.promotionPrice && (
+          <Fragment>
+            <span className="inline-block md:text-base sm:text-sm text-xs text-[#1e1e1e]">
+              ${productData.promotionPrice}.00
+            </span>
+            <span className="inline-block md:text-base sm:text-sm text-xs text-[#666] line-through">
+              ${productData.price}.00
+            </span>
+          </Fragment>
+        )}
+
+        {!productData.promotionPrice && (
+          <span className="inline-block md:text-base sm:text-sm text-xs text-[#1e1e1e]">
+            ${productData.price}.00
+          </span>
+        )}
       </div>
       <button className="md:w-auto w-full mt-3">
         <Link
@@ -39,9 +59,18 @@ const ProductItem: FC = () => {
           Select option
         </Link>
       </button>
-      <span className="absolute top-2 left-2 text-xs font-medium py-0.5 px-2 bg-primary text-white rounded">
-        -13%
-      </span>
+      {productData.promotionPrice && (
+        <span className="absolute top-2 left-2 text-xs font-medium py-0.5 px-2 bg-primary text-white rounded">
+          {Number.parseInt(
+            (
+              ((productData.price - productData.promotionPrice) /
+                productData.price) *
+              100
+            ).toString()
+          )}
+          %
+        </span>
+      )}
     </div>
   );
 };

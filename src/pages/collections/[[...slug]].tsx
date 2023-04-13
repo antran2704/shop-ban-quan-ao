@@ -6,7 +6,7 @@ import { Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
-import { ICategory, IFilterCategory } from "~/interfaces/apiResponse";
+import { ICategory, IFilterCategory, IProduct } from "~/interfaces/apiResponse";
 
 import Header from "~/components/Header";
 import FilterItem from "~/components/Filter";
@@ -25,7 +25,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
   const btnSubmitFilterRef = useRef<HTMLButtonElement>(null);
   const [breadcrumb, setBreadcrumb] = useState<string>("");
   const [categoryData, setCategoryData] = useState<ICategory>();
-  const [listProducts, setListProducts] = useState({});
+  const [listProducts, setListProducts] = useState<IProduct[]>([]);
 
   useEffect(() => {
     const arrs = slug[slug.length - 1].split("-");
@@ -59,21 +59,22 @@ const CollectionItem: FC<Props> = (props: Props) => {
           .get(`${process.env.NEXT_PUBLIC_ENDPOINT_API}/category/${slug}`)
           .then((res) => res.data.payload);
 
-        const listProducts = await axios
+        const listProducts: IProduct[] = await axios
           .get(
             `${process.env.NEXT_PUBLIC_ENDPOINT_API}/product/getAllProductsInCategory/${data._id}`
           )
           .then((res) => res.data.payload);
 
-        console.log(listProducts);
         setCategoryData(data);
+        setListProducts(listProducts);
+        console.log(listProducts);
       } catch (error) {
         console.log(error);
       }
     };
 
     getCategoryAndProducts();
-  }, [slug]);
+  }, []);
   return (
     <div>
       <Header
@@ -118,13 +119,10 @@ const CollectionItem: FC<Props> = (props: Props) => {
               Showing 1 - 12 of 26 result
             </p>
             <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 mt-5 gap-4">
-              <ProductItem />
-              <ProductItem />
-              <ProductItem />
-              <ProductItem />
-              <ProductItem />
-              <ProductItem />
-              <ProductItem />
+              {listProducts.length > 0 &&
+                listProducts.map((product: IProduct, index: number) => (
+                  <ProductItem key={index} productData={product}/>
+                ))}
             </div>
 
             {/* pagination */}
