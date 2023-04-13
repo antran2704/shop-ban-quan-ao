@@ -8,20 +8,22 @@ export const initItemMobile: INavItem[] = [
   {
     name: "Design",
     path: "/design",
-    children: [
-      {
-        name: "Design 2",
-        path: "/design2",
-      },
-    ],
   },
   {
     name: "Collections",
     path: "/collections",
     children: [
       {
-        name: "Test",
-        path: "/collections/test",
+        name: "Accessories",
+        path: "/collections/accessories",
+      },
+      {
+        name: "Garden Decor",
+        path: "/collections/garden-decor",
+      },
+      {
+        name: "Gift",
+        path: "/collections/gift",
       },
     ],
   },
@@ -43,42 +45,6 @@ export const initItemDesktop: INavItem[] = [
   {
     name: "Design",
     path: "/design",
-    megaMenu: [
-      {
-        title: "Cakes",
-        items: [
-          {
-            name: "Architecture Art",
-            path: "/",
-          },
-          {
-            name: "Literature Art",
-            path: "/",
-          },
-          {
-            name: "Theater Art",
-            path: "/",
-          },
-        ],
-      },
-      {
-        title: "Arts",
-        items: [
-          {
-            name: "Architecture Art",
-            path: "/",
-          },
-          {
-            name: "Literature Art",
-            path: "/",
-          },
-          {
-            name: "Theater Art",
-            path: "/",
-          },
-        ],
-      },
-    ],
   },
   {
     name: "Collections",
@@ -88,8 +54,16 @@ export const initItemDesktop: INavItem[] = [
         title: "Test",
         items: [
           {
-            name: "Test",
-            path: "/collections/test",
+            name: "Accessories",
+            path: "/collections/accessories",
+          },
+          {
+            name: "Garden Decor",
+            path: "/collections/garden-decor",
+          },
+          {
+            name: "Gift",
+            path: "/collections/gift",
           },
         ],
       }

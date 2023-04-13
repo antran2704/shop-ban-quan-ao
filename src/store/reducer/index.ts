@@ -1,10 +1,11 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { IInitialState } from "../interface";
 import { IInforProduct } from "~/interfaces";
-import { ClearCarts, GetListCart } from "../actions";
+import { ClearCarts, GetCategories, GetListCart } from "../actions";
 
 const initialState: IInitialState = {
   listCarts: [],
+  categories: [],
   totalCart: 0,
   totalPrice: 0,
 };
@@ -32,21 +33,11 @@ const rootReducer = createReducer(initialState, (builder) => {
     localStorage.setItem("listCart", JSON.stringify(newListCarts));
     state.listCarts = newListCarts;
   });
+
+  builder.addCase(GetCategories, (state, action) => {
+    const listCategories = action.payload;
+    state.categories = listCategories;
+  })
 });
-
-// const rootReducer = (state = initialState, action) => {
-//   switch (action.type) {
-//     case GET_LIST_CARTS:
-//       return {
-//         ...state,
-//         listCarts: action.payload.listCarts,
-//         totalCart: action.payload.totalCart,
-//         totalPrice: action.payload.totalPrice,
-//       };
-
-//     default:
-//       return state;
-//   }
-// };
 
 export default rootReducer;

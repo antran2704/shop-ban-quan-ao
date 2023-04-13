@@ -1,12 +1,6 @@
 import { FC, useState, useRef, useEffect, ChangeEvent } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 
-interface IFilterItem {
-  labelFilter: string;
-  valueFilter: string;
-  paramFilter: string;
-}
-
 interface IFilterPrice {
   gte: string;
   lte: string;
@@ -14,13 +8,14 @@ interface IFilterPrice {
 
 interface Props {
   titleFilter: string;
-  listFilterItem?: IFilterItem[];
+  listFilterItem?: string[];
   typeFilter: string;
+  isShow: boolean;
   query?: any;
 }
 
 const FilterItem: FC<Props> = (props: Props) => {
-  const { titleFilter, listFilterItem, typeFilter, query } = props;
+  const { titleFilter, isShow, listFilterItem, typeFilter, query } = props;
 
   const formPriceInit: IFilterPrice = {
     gte: "",
@@ -28,7 +23,7 @@ const FilterItem: FC<Props> = (props: Props) => {
   };
 
   const listFilterRef = useRef<HTMLUListElement>(null);
-  const [show, setShow] = useState<boolean>(false);
+  const [show, setShow] = useState<boolean>(isShow);
   const [price, setPrice] = useState<IFilterPrice>(formPriceInit);
 
   const handleShowFilter = (): void => {
@@ -51,22 +46,20 @@ const FilterItem: FC<Props> = (props: Props) => {
     setPrice({ ...price, [name]: value });
   };
 
-  const handleCheckedBox = (item: IFilterItem): boolean => {
+  const handleCheckedBox = (item: string): boolean => {
     if (
-      typeof query[item.paramFilter] === "string" &&
-      query[item.paramFilter] === item.valueFilter
+      typeof query[titleFilter.toLowerCase()] === "string" &&
+      query[titleFilter.toLowerCase()] === item
     ) {
       return true;
     }
 
-    if (typeof query[item.paramFilter] === "object") {
-      const value = query[item.paramFilter].find((value: any) => {
-        if (value === item.valueFilter) {
-          return value;
-        }
+    if (typeof query[titleFilter.toLowerCase()] === "object") {
+      const isChecked = query[titleFilter.toLowerCase()].find((value: any) => {
+        return value === item ? true : false;
       });
 
-      return value ? true : false;
+      return isChecked;
     }
     return false;
   };
@@ -74,8 +67,14 @@ const FilterItem: FC<Props> = (props: Props) => {
   useEffect(() => {
     const element = listFilterRef.current;
     if (element) {
-      element.style.height = 0 + "px";
+      if (!isShow) {
+        element.style.height = 0 + "px";
+      } else {
+        const height = element.scrollHeight;
+        element.style.height = height + "px";
+      }
     }
+
     if (query.lte && query.gte && typeFilter === "price") {
       setPrice({ lte: query.lte, gte: query.gte });
     }
@@ -98,16 +97,16 @@ const FilterItem: FC<Props> = (props: Props) => {
       >
         {/* checkBox */}
         {typeFilter === "checkBox" &&
-          listFilterItem?.map((item: IFilterItem, index: number) => (
+          listFilterItem?.map((item: string, index: number) => (
             <li key={index} className="flex items-center gap-2">
               <input
                 type="checkbox"
                 defaultChecked={handleCheckedBox(item)}
-                name={item.paramFilter}
-                value={item.valueFilter}
+                name={titleFilter.toLowerCase()}
+                value={item}
                 className="w-5 h-5"
               />
-              <p className="text-base">{item.labelFilter}</p>
+              <p className="text-base">{item}</p>
             </li>
           ))}
 

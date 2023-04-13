@@ -74,14 +74,26 @@ const Navbar: FC = () => {
         <ul className="lg:flex hidden items-center gap-6">
           {initItemDesktop.map((item: INavItem, index: number) => (
             <li key={index} className={`${styles.navbarItem} relative`}>
-              <Link
-                href={item.path}
-                className={`text-lg font-medium px-5 py-2 text-[#1e1e1e] ${
-                  router.asPath === item.path ? "text-primary" : ""
-                } hover:text-primary transition-all ease-linear duration-100`}
-              >
-                {item.name}
-              </Link>
+              {item.path.length > 1 ? (
+                <Link
+                  href={item.path}
+                  className={`text-lg font-medium px-5 py-2 text-[#1e1e1e] ${
+                    router.asPath.includes(item.path) ? "text-primary" : ""
+                  } hover:text-primary transition-all ease-linear duration-100`}
+                >
+                  {item.name}
+                </Link>
+              ) : (
+                <Link
+                  href={item.path}
+                  className={`text-lg font-medium px-5 py-2 text-[#1e1e1e] ${
+                    router.asPath === item.path ? "text-primary" : ""
+                  } hover:text-primary transition-all ease-linear duration-100`}
+                >
+                  {item.name}
+                </Link>
+              )}
+
               {item?.megaMenu && (
                 <ul
                   className={`${styles.navbarMega} absolute top-10 flex items-start bg-white shadow-lg gap-5 z-10`}
@@ -211,14 +223,25 @@ const Navbar: FC = () => {
         <ul className="lg:flex hidden items-center gap-6">
           {initItemDesktop.map((item: INavItem, index: number) => (
             <li key={index} className={`${styles.navbarItem} relative`}>
-              <Link
-                href={item.path}
-                className={`text-lg font-medium px-5 py-2 text-[#1e1e1e] ${
-                  router.asPath === item.path ? "text-primary" : ""
-                } hover:text-primary transition-all ease-linear duration-100`}
-              >
-                {item.name}
-              </Link>
+              {item.path.length > 1 ? (
+                <Link
+                  href={item.path}
+                  className={`text-lg font-medium px-5 py-2 text-[#1e1e1e] ${
+                    router.asPath.includes(item.path) ? "text-primary" : ""
+                  } hover:text-primary transition-all ease-linear duration-100`}
+                >
+                  {item.name}
+                </Link>
+              ) : (
+                <Link
+                  href={item.path}
+                  className={`text-lg font-medium px-5 py-2 text-[#1e1e1e] ${
+                    router.asPath === item.path ? "text-primary" : ""
+                  } hover:text-primary transition-all ease-linear duration-100`}
+                >
+                  {item.name}
+                </Link>
+              )}
               {item?.megaMenu && (
                 <ul
                   className={`${styles.navbarMega} absolute top-10 flex items-start bg-white shadow-lg gap-5 z-10`}
@@ -323,7 +346,7 @@ const Navbar: FC = () => {
                   <AiFillCloseCircle
                     onClick={() => {
                       handleDeleteProductInCart(listCarts, index);
-                      dispatch(GetListCart())
+                      dispatch(GetListCart());
                     }}
                     className="absolute -top-0.5 -left-1 text-2xl hover:text-primary cursor-pointer"
                   />

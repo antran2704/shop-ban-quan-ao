@@ -1,12 +1,42 @@
 import Link from "next/link";
+import { FC, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from "react-icons/md";
 import { Navigation, Pagination, EffectFade, Autoplay } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 
+// Interface
+import { ICategory, ICategoryPayload } from "~/interfaces/apiResponse";
+
+import { AppDispatch, RootState } from "~/store";
+import { GetCategories } from "~/store/actions";
+
 import ProductItem from "~/components/ProductItem";
 
-export default function Home() {
+const Home: FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { categories } = useSelector((state: RootState) => state.data);
+
+  console.log(categories);
+  useEffect(() => {
+    const getCategories = async () => {
+      try {
+        const data: ICategoryPayload = await axios
+          .get(
+            `${process.env.NEXT_PUBLIC_ENDPOINT_API}/category/getAllCategories`
+          )
+          .then((res) => res.data);
+
+        dispatch(GetCategories(data.payload));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getCategories();
+  }, []);
   return (
     <div>
       {/* banner */}
@@ -117,186 +147,26 @@ export default function Home() {
                 },
               }}
             >
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-1.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Architecture Art Lorem
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-2.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Theater Art
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-3.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Ceramics Art
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-4.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Sculpture Art
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-5.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Painting Art
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-1.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Architecture Art Lorem
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-2.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Theater Art
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-3.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Ceramics Art
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-4.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Sculpture Art
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-5.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Painting Art
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
+              {categories.map((category: ICategory, index: number) => (
+                <SwiperSlide key={index} className="w-2/12">
+                  <Link href={`/collections/${category.slug}`} className="w-ful">
+                    <img
+                      src={category.thumbnail}
+                      alt="image category"
+                      className="w-full rounded-xl"
+                    />
+                  </Link>
+                  <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
+                    {category.title}
+                  </p>
+                  <a
+                    href="#"
+                    className="block w-full text-sm font-medium text-primary text-center hover:underline"
+                  >
+                    View more
+                  </a>
+                </SwiperSlide>
+              ))}
             </Swiper>
           </div>
         </div>
@@ -419,4 +289,6 @@ export default function Home() {
       </section>
     </div>
   );
-}
+};
+
+export default Home;

@@ -1,82 +1,109 @@
 import { GetServerSideProps } from "next";
 import Link from "next/link";
-import { FC, useRef } from "react";
+import { FC, useEffect, useRef, useState } from "react";
+import axios from "axios";
 import { Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
-import FilterItem from "~/components/Filter";
+import { ICategory, IFilterCategory } from "~/interfaces/apiResponse";
 
 import Header from "~/components/Header";
+import FilterItem from "~/components/Filter";
 import ProductItem from "~/components/ProductItem";
 
 interface Props {
   query: any;
 }
 
-const sizes: string[] = ["S", "M", "L", "XL"];
+// const sizes: string[] = ["S", "M", "L", "XL"];
 
 const CollectionItem: FC<Props> = (props: Props) => {
-  const btnSubmitFilterRef = useRef<HTMLButtonElement>(null);
   const { query } = props;
+  const slug = query.slug;
+
+  const btnSubmitFilterRef = useRef<HTMLButtonElement>(null);
+  const [breadcrumb, setBreadcrumb] = useState<string>("");
+  const [categoryData, setCategoryData] = useState<ICategory>();
+  const [listProducts, setListProducts] = useState({});
+
+  useEffect(() => {
+    const arrs = slug[slug.length - 1].split("-");
+    let newString = "";
+    const newArrs = arrs.map((item: string) => {
+      return item.split("").map((chart, index) => {
+        if (index === 0) {
+          return item[0].toUpperCase();
+        } else {
+          return chart;
+        }
+      });
+    });
+
+    newArrs.map((items: string[]) => {
+      items.map((item: string, index: number) => {
+        if (index === items.length - 1) {
+          newString += `${item} `;
+        } else {
+          newString += item;
+        }
+      });
+    });
+    setBreadcrumb(newString);
+  }, [slug]);
+
+  useEffect(() => {
+    const getCategoryAndProducts = async () => {
+      try {
+        const data: ICategory = await axios
+          .get(`${process.env.NEXT_PUBLIC_ENDPOINT_API}/category/${slug}`)
+          .then((res) => res.data.payload);
+
+        const listProducts = await axios
+          .get(
+            `${process.env.NEXT_PUBLIC_ENDPOINT_API}/product/getAllProductsInCategory/${data._id}`
+          )
+          .then((res) => res.data.payload);
+
+        console.log(listProducts);
+        setCategoryData(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getCategoryAndProducts();
+  }, [slug]);
   return (
     <div>
-      <Header title={"Collection item"} listBackLinks={[{title: "Home", link: "/"}]} />
+      <Header
+        title={breadcrumb}
+        listBackLinks={[{ title: "Home", link: "/" }]}
+      />
       <div className="container__cus">
         <div className="flex lg:flex-nowrap flex-wrap items-start justify-between my-10 gap-10">
           <div className="lg:w-3/12 w-full">
             <form>
-              <FilterItem
-                titleFilter="Availability"
-                typeFilter="checkBox"
-                listFilterItem={[
-                  {
-                    labelFilter: "In stock",
-                    valueFilter: "1",
-                    paramFilter: "availability",
-                  },
-                ]}
-                query={query}
-              />
-              <FilterItem
-                titleFilter="Color"
-                listFilterItem={[
-                  {
-                    labelFilter: "Cream",
-                    valueFilter: "cream",
-                    paramFilter: "color",
-                  },
-                  {
-                    labelFilter: "Blue",
-                    valueFilter: "blue",
-                    paramFilter: "color",
-                  },
-                ]}
-                typeFilter="checkBox"
-                query={query}
-              />
+              {categoryData?.filters.map(
+                (item: IFilterCategory, index: number) => (
+                  <FilterItem
+                    key={index}
+                    titleFilter={item.title}
+                    typeFilter="checkBox"
+                    isShow={true}
+                    listFilterItem={item.listFilterItem}
+                    query={query}
+                  />
+                )
+              )}
+
               <FilterItem
                 titleFilter="Price"
+                isShow={true}
                 typeFilter="price"
                 query={query}
               />
-              <FilterItem
-                titleFilter="Brand"
-                listFilterItem={[
-                  {
-                    labelFilter: "Vendor A",
-                    valueFilter: "vendorA",
-                    paramFilter: "brand",
-                  },
-                  {
-                    labelFilter: "Vendor B",
-                    valueFilter: "vendorB",
-                    paramFilter: "brand",
-                  },
-                ]}
-                typeFilter="checkBox"
-                query={query}
-              />
+
               <button
                 ref={btnSubmitFilterRef}
                 type="submit"
