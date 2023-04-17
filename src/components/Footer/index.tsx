@@ -7,19 +7,19 @@ function Footer() {
         <Link href="/" className="md:w-[200px] w-[180px] mb-5 md:mx-0 mx-auto">
           <img src="/images/logo.webp" alt="logo image" className="w-100" />
         </Link>
-        <div className="flex items-start md:text-lg text-base gap-1">
-          <span className="font-medium w-[60px]">Address: </span>
-          <p>55 Nguyễn Kiệm, phường 3, Quận Gò Vấp, TP.HCM</p>
+        <div className="flex items-start md:text-lg text-base">
+          <span className="font-medium md:w-auto w-[60px]">Address: </span>
+          <p className="pl-2">55 Nguyễn Kiệm, phường 3, Quận Gò Vấp, TP.HCM</p>
         </div>
-        <div className="flex items-start md:text-lg text-base gap-1">
-          <span className="font-medium w-[60px]">Phone: </span>
-          <a href="tel:0946003423" className="hover:underline">
+        <div className="flex items-start md:text-lg text-base">
+          <span className="font-medium md:w-auto w-[60px]">Phone: </span>
+          <a href="tel:0946003423" className="pl-2 hover:underline">
             0946003423
           </a>
         </div>
-        <div className="flex items-start md:text-lg text-base gap-1">
-          <span className="font-medium w-[60px]">Email: </span>
-          <a href="mailto:phamtrangiaan27@gmail.com" className="hover:underline">
+        <div className="flex items-start md:text-lg text-base">
+          <span className="font-medium md:w-auto w-[60px]">Email: </span>
+          <a href="mailto:phamtrangiaan27@gmail.com" className="pl-2 hover:underline">
             phamtrangiaan27@gmail.com
           </a>
         </div>

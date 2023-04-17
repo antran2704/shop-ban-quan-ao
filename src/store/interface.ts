@@ -1,8 +1,7 @@
-import { IInforProduct } from "~/interfaces";
-import { ICategory } from "~/interfaces/apiResponse";
+import { ICategory, IOrderProduct } from "~/interfaces/apiResponse";
 
 export interface IInitialState {
-  listCarts: IInforProduct[];
+  listCarts: IOrderProduct[];
   totalCart: number;
   totalPrice: number;
   categories: ICategory[];

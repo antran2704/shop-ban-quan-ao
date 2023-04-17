@@ -3,12 +3,10 @@ import { FC } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import {
-  MdKeyboardArrowLeft,
-  MdKeyboardArrowRight,
-} from "react-icons/md";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
-import { IInforProduct } from "~/interfaces";
+import { IOrderProduct } from "~/interfaces/apiResponse";
+
 import Header from "~/components/Header";
 import CartItem from "~/components/CartItem";
 
@@ -17,7 +15,9 @@ import { ClearCarts } from "~/store/actions";
 
 const Cart: FC = () => {
   const dispatch = useDispatch();
-  const { listCarts, totalPrice } = useSelector((state: RootState) => state.data);
+  const { listCarts, totalPrice } = useSelector(
+    (state: RootState) => state.data
+  );
   return (
     <div>
       <Header title={"Cart"} listBackLinks={[{ title: "Home", link: "/" }]} />
@@ -26,7 +26,7 @@ const Cart: FC = () => {
         {listCarts.length > 0 ? (
           <div>
             <ul className="flex flex-col items-start my-10 lg:gap-5 gap-10">
-              {listCarts.map((item: IInforProduct, index: number) => (
+              {listCarts.map((item: IOrderProduct, index: number) => (
                 <CartItem data={item} index={index} key={index} />
               ))}
             </ul>
@@ -57,12 +57,12 @@ const Cart: FC = () => {
                     </tr>
                   </tbody>
                 </table>
-                <button
-                  onClick={() => dispatch(ClearCarts())}
+                <Link
+                  href={"/checkout"}
                   className="flex items-center justify-center w-full text-lg font-medium text-white whitespace-nowrap hover:text-dark bg-primary hover:bg-white px-8 py-3 mt-4 gap-2 border border-primary hover:border-dark transition-all ease-linear duration-100"
                 >
                   Proceed to Checkout
-                </button>
+                </Link>
               </div>
             </div>
           </div>

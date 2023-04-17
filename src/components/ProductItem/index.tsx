@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FC, Fragment } from "react";
-import { AiOutlineStar, AiFillStar } from "react-icons/ai";
+import { AiFillStar } from "react-icons/ai";
+import percentPromotionPrice from "~/helpers/percentPromotionPrice";
 import { IProduct } from "~/interfaces/apiResponse";
 
 interface Props {
@@ -53,7 +54,7 @@ const ProductItem: FC<Props> = (props: Props) => {
       </div>
       <button className="md:w-auto w-full mt-3">
         <Link
-          href={"/"}
+          href={`/collections/product/${productData.slug}`}
           className="flex items-center justify-center md:text-base sm:text-sm text-xs font-normal bg-[#f0f0f0] hover:bg-primary text-[#1e1e1e] hover:text-white py-2 md:px-4 px-2 rounded transition-all ease-linear duration-150"
         >
           Select option
@@ -61,13 +62,7 @@ const ProductItem: FC<Props> = (props: Props) => {
       </button>
       {productData.promotionPrice && (
         <span className="absolute top-2 left-2 text-xs font-medium py-0.5 px-2 bg-primary text-white rounded">
-          {Number.parseInt(
-            (
-              ((productData.price - productData.promotionPrice) /
-                productData.price) *
-              100
-            ).toString()
-          )}
+          {percentPromotionPrice(productData.price, productData.promotionPrice)}
           %
         </span>
       )}

@@ -1,6 +1,6 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { IInitialState } from "../interface";
-import { IInforProduct } from "~/interfaces";
+import { IOrderProduct } from "~/interfaces/apiResponse";
 import { ClearCarts, GetCategories, GetListCart } from "../actions";
 
 const initialState: IInitialState = {
@@ -13,11 +13,11 @@ const initialState: IInitialState = {
 const rootReducer = createReducer(initialState, (builder) => {
   builder.addCase(GetListCart, (state) => {
     const listCarts = JSON.parse(localStorage.getItem("listCart") || "[]");
-    const totalCart = listCarts.reduce((total: number, item: IInforProduct) => {
+    const totalCart = listCarts.reduce((total: number, item: IOrderProduct) => {
       return (total += item.count);
     }, 0);
     const totalPrice = listCarts.reduce(
-      (total: number, item: IInforProduct) => {
+      (total: number, item: IOrderProduct) => {
         return (total += item.count * item.price);
       },
       0
@@ -32,6 +32,8 @@ const rootReducer = createReducer(initialState, (builder) => {
     const newListCarts: [] = [];
     localStorage.setItem("listCart", JSON.stringify(newListCarts));
     state.listCarts = newListCarts;
+    state.totalCart = 0;
+    state.totalPrice = 0;
   });
 
   builder.addCase(GetCategories, (state, action) => {

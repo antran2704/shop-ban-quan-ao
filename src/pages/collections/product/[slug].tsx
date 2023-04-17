@@ -1,8 +1,9 @@
 import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useRef, FC, useEffect, useState, MouseEvent } from "react";
+import { useRef, FC, useEffect, useState, MouseEvent, Fragment } from "react";
 import { useDispatch } from "react-redux";
+import axios from "axios";
 // gallery
 import LightGallery from "lightgallery/react";
 import lgThumbnail from "lightgallery/plugins/thumbnail";
@@ -20,30 +21,29 @@ import {
   MdOutlineZoomOutMap,
 } from "react-icons/md";
 
+import {
+  IProduct,
+  IOptionProduct,
+  IOrderProduct,
+} from "~/interfaces/apiResponse";
+
+import { GetListCart } from "~/store/actions";
+
+import percentPromotionPrice from "~/helpers/percentPromotionPrice";
+
 import Header from "~/components/Header";
 import ProductQuantity from "~/components/ProductQuantity";
-import { IInforProduct } from "~/interfaces";
-import { GetListCart } from "~/store/actions";
 
 interface Props {
   query: any;
+  productData: IProduct;
+  listImages: string[];
 }
 
 const tags: string[] = ["Description", "Reviews", "Shipping Policy"];
-const sizes: string[] = ["S", "M", "L", "XL"];
-const listImages: string[] = [
-  "/images/product/product1.webp",
-  "/images/product/product2.webp",
-  "/images/product/product3.webp",
-  "/images/product/product4.webp",
-  "/images/product/product1.webp",
-  "/images/product/product2.webp",
-  "/images/product/product3.webp",
-  "/images/product/product4.webp",
-];
 
 const CollectionItem: FC<Props> = (props: Props) => {
-  const { query } = props;
+  const { query, productData, listImages } = props;
   const router = useRouter();
 
   const dispatch = useDispatch();
@@ -76,45 +76,51 @@ const CollectionItem: FC<Props> = (props: Props) => {
   };
 
   const hanldeAddCart = () => {
-    if (!query.size) {
-      setMessage({ ...message, messageSize: "Please choose your size!!!" });
-    }
-    // if (!query.color) {
-    //   setMessage({ ...message, messageColor: "Please choose your color!!!" });
-    // }
-    else {
-      let exitIndex = 0;
-      const dataProduct: IInforProduct = {
-        name: "X. Complementary Product 2",
-        slug: router.asPath,
-        count: totalProduct,
-        price: 29.0,
-        size: query.size || undefined,
-        color: query.color || undefined,
-        avatarProduct: listImages[0],
-      };
-      const listCarted = JSON.parse(localStorage.getItem("listCart") || "[]");
-      const exitItem = listCarted.find((item: IInforProduct, index: number) => {
-        if (item.name === dataProduct.name && item.slug === dataProduct.slug) {
-          exitIndex = index;
-          return item;
-        }
-      });
-
-      if (exitItem) {
-        listCarted[exitIndex] = {
-          ...exitItem,
-          count: exitItem.count + dataProduct.count,
-        };
-        localStorage.setItem("listCart", JSON.stringify(listCarted));
-        setShow(true);
-      } else {
-        listCarted.push(dataProduct);
-        localStorage.setItem("listCart", JSON.stringify(listCarted));
-        setShow(true);
+    if (productData.listSizes.length > 0 || productData.listColors.length > 0) {
+      if (productData.listSizes.length > 0 && !query.size) {
+        setMessage({ ...message, messageSize: "Please choose your size!!!" });
+        return;
       }
-      dispatch(GetListCart());
+
+      if (productData.listColors.length > 0 && !query.color) {
+        setMessage({ ...message, messageColor: "Please choose your color!!!" });
+        return;
+      }
     }
+
+    let exitIndex = 0;
+    const dataProduct: IOrderProduct = {
+      name: productData.name,
+      slug: router.asPath,
+      count: totalProduct,
+      price: productData.promotionPrice
+        ? productData.promotionPrice
+        : productData.price,
+      size: query.size || undefined,
+      color: query.color || undefined,
+      avatarProduct: listImages[0],
+    };
+    const listCarted = JSON.parse(localStorage.getItem("listCart") || "[]");
+    const exitItem = listCarted.find((item: IOrderProduct, index: number) => {
+      if (item.name === dataProduct.name && item.slug === dataProduct.slug) {
+        exitIndex = index;
+        return item;
+      }
+    });
+
+    if (exitItem) {
+      listCarted[exitIndex] = {
+        ...exitItem,
+        count: exitItem.count + dataProduct.count,
+      };
+      localStorage.setItem("listCart", JSON.stringify(listCarted));
+      setShow(true);
+    } else {
+      listCarted.push(dataProduct);
+      localStorage.setItem("listCart", JSON.stringify(listCarted));
+      setShow(true);
+    }
+    dispatch(GetListCart());
   };
 
   useEffect(() => {
@@ -131,10 +137,13 @@ const CollectionItem: FC<Props> = (props: Props) => {
   return (
     <div>
       <Header
-        title={"Product"}
+        title={productData.name}
         listBackLinks={[
           { title: "Home", link: "/" },
-          { title: "Collection item", link: "/collections/test" },
+          {
+            title: productData.category.title,
+            link: `/collections/${productData.category.slug}`,
+          },
         ]}
       />
 
@@ -199,64 +208,81 @@ const CollectionItem: FC<Props> = (props: Props) => {
           </div>
           <div className="lg:w-6/12 w-full">
             <div className="pb-5 mb-5 border-b border-borderColor">
-              <h3 className="text-2xl font-medium">
-                X. Complementary Product 2
-              </h3>
+              <h3 className="text-2xl font-medium">{productData.name}</h3>
               {/* price */}
               <div className="flex flex-wrap items-end my-3 gap-3">
-                <h3 className="text-2xl font-medium text-[#6a7779] line-through">
-                  $60.00
-                </h3>
-                <h2 className="text-3xl font-medium">$29.00</h2>
-                <span className="text-sm font-medium text-white px-2 py-0.5 bg-primary rounded-md">
-                  Save -35%
-                </span>
+                {productData.promotionPrice && (
+                  <Fragment>
+                    <h3 className="text-2xl font-medium text-[#6a7779] line-through">
+                      ${productData.promotionPrice}.00
+                    </h3>
+                    <h2 className="text-3xl font-medium">
+                      ${productData.price}.00
+                    </h2>
+                    <span className="text-sm font-medium text-white px-2 py-0.5 bg-primary rounded-md">
+                      Save -
+                      {percentPromotionPrice(
+                        productData.price,
+                        productData.promotionPrice
+                      )}
+                      %
+                    </span>
+                  </Fragment>
+                )}
+                {!productData.promotionPrice && (
+                  <h2 className="text-3xl font-medium">${productData.price}</h2>
+                )}
               </div>
               <p className="text-base text-[#071c1f]">
-                The European languages are members of the same family. Their
-                separate existence is a myth. For science, music, sport, etc,
-                Europe uses the same vocabulary. The languages only differ in
-                their grammar
+                {productData.shortDescription}
               </p>
             </div>
             <div className="pb-5 mb-5 border-b border-borderColor">
               <div className="flex items-center text-sm mb-5">
                 <span className="text-base font-medium min-w-[100px]">
-                  SKU:
+                  Sold:
                 </span>
-                <p>102</p>
+                <p>{productData.sold}</p>
               </div>
               <div className="flex items-center text-sm mb-5">
                 <span className="text-base font-medium min-w-[100px]">
-                  Vendor:
+                  Brand:
                 </span>
-                <p>Vendor E</p>
+                <p>{productData.brand ? productData.brand : "Updating"}</p>
               </div>
               <div className="flex items-center text-sm mb-5">
                 <span className="text-base font-medium min-w-[100px]">
-                  Type:
+                  Quantity:
                 </span>
-                <p>Type E</p>
+                <p>{productData.quantity}</p>
               </div>
             </div>
             <div className="pb-5 mb-5 border-b border-borderColor">
               <div className="flex items-center">
-                <span className="text-base font-medium min-w-[100px]">
-                  Size:
-                </span>
-                <form className="flex flex-wrap items-center gap-2">
-                  {sizes?.map((size: string, index: number) => (
-                    <input
-                      key={index}
-                      type="submit"
-                      name="size"
-                      value={size}
-                      className={`text-sm px-4 py-0.5 font-medium hover:text-white ${
-                        query.size === size ? "bg-primary text-white" : ""
-                      } hover:bg-primary border border-borderColor transition-all ease-linear duration-100 cursor-pointer`}
-                    />
-                  ))}
-                </form>
+                {productData.listSizes.length > 0 && (
+                  <Fragment>
+                    <span className="text-base font-medium min-w-[100px]">
+                      Size:
+                    </span>
+                    <form className="flex flex-wrap items-center gap-2">
+                      {productData.listSizes.map(
+                        (size: IOptionProduct, index: number) => (
+                          <input
+                            key={index}
+                            type="submit"
+                            name="size"
+                            value={size.value}
+                            className={`text-sm px-4 py-0.5 font-medium hover:text-white ${
+                              query.size === size.value
+                                ? "bg-primary text-white"
+                                : ""
+                            } hover:bg-primary border border-borderColor transition-all ease-linear duration-100 cursor-pointer`}
+                          />
+                        )
+                      )}
+                    </form>
+                  </Fragment>
+                )}
               </div>
               <p className="text-lg text-primary font-medium mt-3">
                 {message.messageSize}
@@ -319,22 +345,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
           <div className="mt-10">
             {currentTag === "Description" && (
               <div>
-                <p className="text-lg mb-5">
-                  he European languages are members of the same family. Their
-                  separate existence is a myth. For science, music, sport, etc,
-                  Europe uses the same vocabulary. The languages only differ in
-                  their grammar, their pronunciation and their most common
-                  words. Everyone realizes why a new common language would be
-                  desirable: one could refuse to pay expensive translators.
-                </p>
-                <p className="text-lg mb-5">
-                  To achieve this, it would be necessary to have uniform
-                  grammar, pronunciation and more common words. If several
-                  languages coalesce, the grammar of the resulting language is
-                  more simple and regular than that of the individual languages.
-                  The new common language will be more simple and regular than
-                  the existing European languages.
-                </p>
+                <p className="text-lg mb-5">{productData.description}</p>
               </div>
             )}
 
@@ -691,8 +702,17 @@ const CollectionItem: FC<Props> = (props: Props) => {
 export default CollectionItem;
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { slug } = query;
+
+  const productData: IProduct = await axios
+    .get(`${process.env.NEXT_PUBLIC_ENDPOINT_API}/product/${slug}`)
+    .then((res) => res.data.payload);
+
+  const listImages: string[] = productData.listImages;
   return {
     props: {
+      productData,
+      listImages,
       query,
     },
   };

@@ -13,10 +13,12 @@ import { BsArrowRightShort, BsArrowLeftShort } from "react-icons/bs";
 import { HiMenu } from "react-icons/hi";
 
 import { initItemDesktop, initItemMobile } from "./index";
+
+import { IOrderProduct } from "~/interfaces/apiResponse";
 import { IMegaItem, INavItem } from "./interface";
 
 import useClientY from "~/hooks/useClientY";
-import { IInforProduct } from "~/interfaces";
+
 
 import { RootState } from "~/store";
 import { GetListCart, handleDeleteProductInCart } from "~/store/actions";
@@ -332,7 +334,7 @@ const Navbar: FC = () => {
             />
           </div>
           <ul className="list__modal-cart w-full h-[80vh] pb-3 border-b border-borderColor gap-5 overflow-y-auto">
-            {listCarts.map((item: IInforProduct, index: number) => (
+            {listCarts.map((item: IOrderProduct, index: number) => (
               <li
                 key={index}
                 className="flex items-center pb-3 px-2 border-b border-borderColor gap-4"

@@ -1,12 +1,20 @@
 import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
 import Link from "next/link";
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, Fragment, useEffect, useRef, useState } from "react";
 import axios from "axios";
+import Pagination from "rc-pagination";
 import { Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
-import { ICategory, IFilterCategory, IProduct } from "~/interfaces/apiResponse";
+import {
+  ICategory,
+  IFilterCategory,
+  IProduct,
+  IPagination,
+  IListProduct,
+} from "~/interfaces/apiResponse";
 
 import Header from "~/components/Header";
 import FilterItem from "~/components/Filter";
@@ -16,16 +24,49 @@ interface Props {
   query: any;
 }
 
-// const sizes: string[] = ["S", "M", "L", "XL"];
+const initPagination = {
+  pageSize: 0,
+  totalItems: 0,
+  currentPage: 0,
+};
 
 const CollectionItem: FC<Props> = (props: Props) => {
+  const router = useRouter();
+
   const { query } = props;
   const slug = query.slug;
+  const currentPage = query.page ? Number(query.page) : 1;
 
   const btnSubmitFilterRef = useRef<HTMLButtonElement>(null);
   const [breadcrumb, setBreadcrumb] = useState<string>("");
   const [categoryData, setCategoryData] = useState<ICategory>();
   const [listProducts, setListProducts] = useState<IProduct[]>([]);
+  const [pagination, setPagination] = useState<IPagination>(initPagination);
+
+  const handeChangePage = async (page: number) => {
+    const currentUrl = router.asPath;
+    const index = router.asPath.indexOf("?");
+    router.query.page = page.toString();
+    if (index !== -1) {
+      if (currentUrl.includes(`page=${currentPage}`)) {
+        const newUrl = currentUrl.replace(
+          `page=${currentPage}`,
+          `page=${page}`
+        );
+        router.push(
+          `/collections/${categoryData?.slug}?${newUrl.slice(index + 1)}`
+        );
+      } else {
+        router.push(
+          `/collections/${categoryData?.slug}?${router.asPath.slice(
+            index + 1
+          )}&page=${page}`
+        );
+      }
+    } else {
+      router.push(`/collections/${categoryData?.slug}?page=${page}`);
+    }
+  };
 
   useEffect(() => {
     const arrs = slug[slug.length - 1].split("-");
@@ -52,29 +93,59 @@ const CollectionItem: FC<Props> = (props: Props) => {
     setBreadcrumb(newString);
   }, [slug]);
 
+  // handle get data of current category
   useEffect(() => {
-    const getCategoryAndProducts = async () => {
+    const getCategory = async () => {
       try {
         const data: ICategory = await axios
           .get(`${process.env.NEXT_PUBLIC_ENDPOINT_API}/category/${slug}`)
           .then((res) => res.data.payload);
 
-        const listProducts: IProduct[] = await axios
-          .get(
-            `${process.env.NEXT_PUBLIC_ENDPOINT_API}/product/getAllProductsInCategory/${data._id}`
-          )
-          .then((res) => res.data.payload);
-
         setCategoryData(data);
-        setListProducts(listProducts);
-        console.log(listProducts);
       } catch (error) {
         console.log(error);
       }
     };
 
-    getCategoryAndProducts();
+    getCategory();
   }, []);
+
+  // handle get items of current category
+  useEffect(() => {
+    const getCategoryAndProducts = async () => {
+      const index = router.asPath.indexOf("?");
+      let listProducts: IListProduct;
+
+      try {
+        if (index !== -1) {
+          listProducts = await axios
+            .get(
+              `${
+                process.env.NEXT_PUBLIC_ENDPOINT_API
+              }/product/getAllProductsInCategory/${
+                categoryData?._id
+              }?${router.asPath.slice(index + 1)}&page=${currentPage}`
+            )
+            .then((res) => res.data);
+        } else {
+          listProducts = await axios
+            .get(
+              `${process.env.NEXT_PUBLIC_ENDPOINT_API}/product/getAllProductsInCategory/${categoryData?._id}?page=${currentPage}`
+            )
+            .then((res) => res.data);
+        }
+        console.log(listProducts);
+        setListProducts(listProducts.payload);
+        setPagination(listProducts.pagination);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    if (categoryData?._id) {
+      getCategoryAndProducts();
+    }
+  }, [currentPage, categoryData]);
   return (
     <div>
       <Header
@@ -115,59 +186,52 @@ const CollectionItem: FC<Props> = (props: Props) => {
             </form>
           </div>
           <div className="lg:w-9/12 w-full">
-            <p className="text-lg text-right font-medium">
-              Showing 1 - 12 of 26 result
-            </p>
+            {pagination?.totalItems > 0 && (
+              <p className="flex items-center justify-end text-lg text-right font-medium gap-1">
+                <span>Showing</span>
+                {pagination.currentPage === 1
+                  ? 1
+                  : pagination.pageSize * pagination.currentPage - 1 + 1}
+                <span>-</span>
+                {pagination.pageSize * pagination.currentPage >
+                pagination.totalItems
+                  ? pagination.totalItems
+                  : pagination.pageSize * pagination.currentPage}
+                <span>of</span>
+                {pagination.totalItems}
+                <span>result</span>
+              </p>
+            )}
+            {listProducts.length === 0 && (
+              <Fragment>
+                <h3 className="text-2xl text-center">
+                  No item in category <strong>{categoryData?.title}</strong>
+                </h3>
+                <Link
+                  className="block text-xl text-center hover:text-primary hover:underline font-medium mt-2"
+                  href={"/"}
+                >
+                  Back to home
+                </Link>
+              </Fragment>
+            )}
             <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 mt-5 gap-4">
               {listProducts.length > 0 &&
                 listProducts.map((product: IProduct, index: number) => (
-                  <ProductItem key={index} productData={product}/>
+                  <ProductItem key={index} productData={product} />
                 ))}
             </div>
 
             {/* pagination */}
-            <ul className="flex items-center justify-center mt-10 gap-3">
-              <li className="sm:w-12 sm:h-12 w-10 h-10">
-                <Link
-                  href={"/"}
-                  className="flex items-center justify-center w-full h-full bg-white hover:bg-primary hover:text-white text-lg font-medium border border-[#e5e5e5] transition-all ease-linear duration-100"
-                >
-                  <MdKeyboardArrowLeft className="sm:text-3xl text-xl" />
-                </Link>
-              </li>
-              <li className="sm:w-12 sm:h-12 w-10 h-10">
-                <Link
-                  href={"/"}
-                  className="flex items-center justify-center w-full h-full bg-white hover:bg-primary hover:text-white text-lg font-medium border border-[#e5e5e5] transition-all ease-linear duration-100"
-                >
-                  1
-                </Link>
-              </li>
-              <li className="sm:w-12 sm:h-12 w-10 h-10">
-                <Link
-                  href={"/"}
-                  className="flex items-center justify-center w-full h-full bg-white hover:bg-primary hover:text-white text-lg font-medium border border-[#e5e5e5] transition-all ease-linear duration-100"
-                >
-                  2
-                </Link>
-              </li>
-              <li className="sm:w-12 sm:h-12 w-10 h-10">
-                <Link
-                  href={"/"}
-                  className="flex items-center justify-center w-full h-full bg-white hover:bg-primary hover:text-white text-lg font-medium border border-[#e5e5e5] transition-all ease-linear duration-100"
-                >
-                  3
-                </Link>
-              </li>
-              <li className="sm:w-12 sm:h-12 w-10 h-10">
-                <Link
-                  href={"/"}
-                  className="flex items-center justify-center w-full h-full bg-white hover:bg-primary hover:text-white text-lg font-medium border border-[#e5e5e5] transition-all ease-linear duration-100"
-                >
-                  <MdKeyboardArrowRight className="sm:text-3xl text-xl" />
-                </Link>
-              </li>
-            </ul>
+            {pagination?.totalItems > pagination?.pageSize && (
+              <Pagination
+                current={currentPage}
+                className="pagination"
+                onChange={(page) => handeChangePage(page)}
+                total={pagination.totalItems}
+                pageSize={pagination.pageSize}
+              />
+            )}
           </div>
         </div>
       </div>

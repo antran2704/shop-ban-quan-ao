@@ -10,6 +10,17 @@ export interface IFilterCategory {
 }
 
 // interface data Categories
+export interface IPagination {
+  pageSize: number;
+  currentPage: number;
+  totalItems: number;
+}
+
+export interface IPayload {
+  status: number;
+  pagination: IPagination;
+}
+
 export interface ICategory {
   _id: string;
   title: string;
@@ -21,9 +32,17 @@ export interface ICategory {
   filters: IFilterCategory[];
 }
 
+export interface IOptionProduct {
+  value: string;
+  outOfStock: boolean;
+}
+
 export interface IProduct {
   name: string;
-  category: string;
+  category: {
+    title: string;
+    slug: string;
+  };
   shortDescription: string;
   description: string;
   price: number;
@@ -37,22 +56,25 @@ export interface IProduct {
   viewer: number;
   stars: number;
   brand: string;
-  listSizes: [
-    {
-      value: string;
-      outOfStock: boolean;
-    }
-  ];
-  listColors: [
-    {
-      value: string;
-      outOfStock: boolean;
-    }
-  ];
+  listSizes: IOptionProduct[];
+  listColors: IOptionProduct[];
   slug: string;
 }
 
-export interface ICategoryPayload {
-  status: number;
+export interface IOrderProduct {
+  name: string;
+  slug: string;
+  count: number;
+  price: number;
+  size: string | undefined;
+  color: string | undefined;
+  avatarProduct: string;
+}
+
+export interface ICategoryPayload extends IPayload {
   payload: ICategory[];
+}
+
+export interface IListProduct extends IPayload {
+  payload: IProduct[];
 }
