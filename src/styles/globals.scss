@@ -6,7 +6,7 @@
 @mixin scroll() {
   &::-webkit-scrollbar {
     background-color: transparent;
-    width: 2px;
+    width: 4px;
     height: 2px;
     overflow: overlay;
   }
@@ -42,6 +42,15 @@ body {
   max-width: 1230px;
   padding: 0 20px;
   margin: 0 auto;
+}
+
+// scroll
+.scroll {
+  @include scroll();
+}
+
+.scrollHidden {
+  @include scrollHidden();
 }
 
 input[type="checkbox"]:checked {
@@ -190,10 +199,6 @@ input[type="checkbox"]:checked:after {
 
 // product
 .product__tags {
-  @include scrollHidden;
-}
-
-.list__modal-cart {
   @include scrollHidden;
 }
 

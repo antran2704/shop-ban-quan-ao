@@ -333,16 +333,16 @@ const Navbar: FC = () => {
               onClick={() => setShowModalCart(false)}
             />
           </div>
-          <ul className="list__modal-cart w-full h-[80vh] pb-3 border-b border-borderColor gap-5 overflow-y-auto">
+          <ul className="scrollHidden flex flex-col w-full h-[80vh] pb-3 border-b border-borderColor gap-3 overflow-y-auto ">
             {listCarts.map((item: IOrderProduct, index: number) => (
               <li
                 key={index}
                 className="flex items-center pb-3 px-2 border-b border-borderColor gap-4"
               >
-                <div className="relative w-3/12 h-20">
+                <div className="relative h-20">
                   <img
                     src={item.avatarProduct}
-                    className="w-full h-full"
+                    className="sm:w-[80px] sm:h-[80px] w-[60px] h-[60px]"
                     alt="img"
                   />
                   <AiFillCloseCircle
@@ -356,19 +356,19 @@ const Navbar: FC = () => {
                 <div className="w-8/12">
                   <Link
                     href={item.slug}
-                    className="text-base font-medium hover:text-primary"
+                    className="sm:text-base text-sm font-medium hover:text-primary"
                   >
                     {item.name}
                   </Link>
                   <div className="flex items-center gap-2">
                     {item.size && (
-                      <span className="text-sm">Size: {item.size}</span>
+                      <span className="sm:text-sm text-xs">Size: {item.size}</span>
                     )}
                     {item.color && (
-                      <span className="text-sm">Color: {item.color}</span>
+                      <span className="sm:text-sm text-xs">Color: {item.color}</span>
                     )}
                   </div>
-                  <p className="text-base mt-2">
+                  <p className="sm:text-base text-sm mt-2">
                     {item.count} X ${item.price}.00
                   </p>
                 </div>
