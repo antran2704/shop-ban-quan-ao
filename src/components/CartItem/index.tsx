@@ -34,7 +34,7 @@ const CartItem: FC<Props> = (props: Props) => {
       count: totalProduct,
     };
     localStorage.setItem("listCart", JSON.stringify(currentListCarts));
-    dispatch(GetListCart());
+    // dispatch(GetListCart());
   }, [totalProduct]);
   return (
     <li className="flex lg:flex-row flex-col items-center justify-between w-full lg:pb-5 p-5 border border-borderColor gap-5">

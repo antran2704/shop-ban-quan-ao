@@ -113,8 +113,8 @@ const FilterItem: FC<Props> = (props: Props) => {
         {/* type price */}
         {typeFilter === "price" && (
           <div className="w-full">
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-center justify-between gap-10">
+              <div className="w-1/2">
                 <span className="block text-base mb-1">From $</span>
                 <input
                   name="gte"
@@ -122,10 +122,10 @@ const FilterItem: FC<Props> = (props: Props) => {
                   value={price.gte}
                   onChange={onChangePrice}
                   placeholder="0"
-                  className="w-[100px] h-10 text-base p-2 border rounded"
+                  className="w-full h-10 text-base p-2 border rounded"
                 />
               </div>
-              <div>
+              <div className="w-1/2">
                 <span className="block text-base mb-1">To $</span>
                 <input
                   name="lte"
@@ -133,7 +133,7 @@ const FilterItem: FC<Props> = (props: Props) => {
                   onChange={onChangePrice}
                   value={price.lte}
                   placeholder="110.00"
-                  className="w-[100px] h-10 text-base p-2 border rounded"
+                  className="w-full h-10 text-base p-2 border rounded"
                 />
               </div>
             </div>

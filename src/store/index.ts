@@ -4,13 +4,7 @@ import rootReducer from "~/store/reducer";
 const store = configureStore({
   reducer: {
     data: rootReducer,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      immutableCheck: false,
-      serializableCheck: false,
-    }),
-  devTools: true,
+  }
 });
 
 export default store;

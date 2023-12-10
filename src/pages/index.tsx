@@ -8,30 +8,39 @@ import { Swiper, SwiperSlide } from "swiper/react";
 // Interface
 import { ICategory, ICategoryPayload } from "~/interfaces/apiResponse";
 
-import { GetCategories } from "~/store/actions";
-
-import ProductItem from "~/components/ProductItem";
-
 const Home: FC = () => {
   const [categories, setCategories] = useState<any>([]);
+  const [products, setProducts] = useState<any>([]);
+
+  const getCategories = async () => {
+    try {
+      const data: ICategoryPayload = await axios
+        .get(`${process.env.NEXT_PUBLIC_ENDPOINT_API}/categories`)
+        .then((res) => res.data);
+
+      setCategories(data.payload);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getProducts = async () => {
+    try {
+      const data: any = await axios
+        .get(`${process.env.NEXT_PUBLIC_ENDPOINT_API}/products`)
+        .then((res) => res.data);
+
+      if (data.status === 200) {
+        setProducts(data.payload);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    const getCategories = async () => {
-      try {
-        const data: ICategoryPayload = await axios
-          .get(
-            `${process.env.NEXT_PUBLIC_ENDPOINT_API}/categories`
-          )
-          .then((res) => res.data);
-            console.log(data)
-            
-          setCategories(data.payload);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
     getCategories();
+    getProducts();
   }, []);
   return (
     <div>
@@ -110,9 +119,7 @@ const Home: FC = () => {
       <section className="category my-10">
         <div className="container__cus">
           <div className="flex items-center justify-between mb-6">
-            <p className="text-xl font-normal text-[#1e1e1e]">
-              Shop By Category
-            </p>
+            <p className="text-xl font-normal text-[#1e1e1e]">Categories</p>
             <div className="flex items-center gap-2">
               <button className="category__btn-prev flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-primary rounded-full transition-all duration-100">
                 <MdKeyboardArrowLeft className="text-3xl text-[#9ea18e] hover:text-white" />
@@ -145,7 +152,7 @@ const Home: FC = () => {
             >
               {categories.map((category: ICategory, index: number) => (
                 <SwiperSlide key={index} className="w-2/12">
-                  <Link href={`/collections/${category.slug}`} className="w-ful">
+                  <Link href={`/collections/${category._id}`} className="w-ful">
                     <img
                       src={category.thumbnail}
                       alt="image category"
@@ -167,14 +174,11 @@ const Home: FC = () => {
           </div>
         </div>
       </section>
-
 
       <section className="category my-10">
         <div className="container__cus">
           <div className="flex items-center justify-between mb-6">
-            <p className="text-xl font-normal text-[#1e1e1e]">
-              Products
-            </p>
+            <p className="text-xl font-normal text-[#1e1e1e]">Products</p>
             <div className="flex items-center gap-2">
               <button className="category__btn-prev flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-primary rounded-full transition-all duration-100">
                 <MdKeyboardArrowLeft className="text-3xl text-[#9ea18e] hover:text-white" />
@@ -205,17 +209,20 @@ const Home: FC = () => {
                 },
               }}
             >
-              {categories.map((category: ICategory, index: number) => (
+              {products.map((product: any, index: number) => (
                 <SwiperSlide key={index} className="w-2/12">
-                  <Link href={`/collections/${category.slug}`} className="w-ful">
+                  <Link
+                    href={`/collections/product/${product._id}`}
+                    className="w-ful"
+                  >
                     <img
-                      src={category.thumbnail}
-                      alt="image category"
+                      src={product.thumbnail}
+                      alt="image product"
                       className="w-[200px] h-[200px] rounded-xl"
                     />
                   </Link>
                   <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                    {category.title}
+                    {product.title}
                   </p>
                   <a
                     href="#"
@@ -227,67 +234,6 @@ const Home: FC = () => {
               ))}
             </Swiper>
           </div>
-        </div>
-      </section>
-
-      {/* Best Seller */}
-      <section className="trending my-10">
-        <div className="container__cus">
-          <div className="flex items-center justify-between mb-6">
-            <p className="text-xl font-normal text-[#1e1e1e]">Best Seller</p>
-            <div className="flex items-center gap-2">
-              <button className="trending__btn-prev flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-primary rounded-full transition-all duration-100">
-                <MdKeyboardArrowLeft className="text-3xl text-[#9ea18e] hover:text-white" />
-              </button>
-              <button className="trending__btn-next flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-primary rounded-full transition-all duration-100">
-                <MdKeyboardArrowRight className="text-3xl text-[#9ea18e] hover:text-white" />
-              </button>
-            </div>
-          </div>
-          <Swiper
-            modules={[Navigation]}
-            slidesPerView={2}
-            spaceBetween={10}
-            navigation={{
-              nextEl: ".trending__btn-next",
-              prevEl: ".trending__btn-prev",
-            }}
-            breakpoints={{
-              478: {
-                slidesPerView: 3,
-                spaceBetween: 14,
-              },
-              650: {
-                slidesPerView: 4,
-                spaceBetween: 18,
-              },
-              990: {
-                slidesPerView: 5,
-                spaceBetween: 20,
-              },
-            }}
-          >
-             {categories.map((category: ICategory, index: number) => (
-                <SwiperSlide key={index} className="w-2/12">
-                  <Link href={`/collections/${category.slug}`} className="w-ful">
-                    <img
-                      src={category.thumbnail}
-                      alt="image category"
-                      className="w-[200px] h-[200px] rounded-xl"
-                    />
-                  </Link>
-                  <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                    {category.title}
-                  </p>
-                  <a
-                    href="#"
-                    className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                  >
-                    View more
-                  </a>
-                </SwiperSlide>
-              ))}
-            </Swiper>
         </div>
       </section>
 

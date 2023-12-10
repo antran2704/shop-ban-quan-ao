@@ -34,6 +34,7 @@ import percentPromotionPrice from "~/helpers/percentPromotionPrice";
 
 import Header from "~/components/Header";
 import ProductQuantity from "~/components/ProductQuantity";
+import { currencyFormat } from "~/helpers/currencyFormat";
 
 interface Props {
   query: any;
@@ -130,14 +131,15 @@ const CollectionItem: FC<Props> = (props: Props) => {
         .get(`${process.env.NEXT_PUBLIC_ENDPOINT_API}/products/id/${id}`)
         .then((res) => res.data);
 
+      console.log(response);
       setCurrentImage(response.payload.gallery[0]);
       setListImages(response.payload.gallery);
       setDataDescr(response.payload);
       console.log(response);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     const lineEl = lineRef.current;
@@ -157,7 +159,11 @@ const CollectionItem: FC<Props> = (props: Props) => {
       <section className="container__cus">
         <div className="flex lg:flex-nowrap flex-wrap items-start lg:justify-between justify-center my-14 lg:gap-5 gap-8">
           <div className="relative lg:w-5/12 sm:w-6/12 w-full">
-            <img className="w-full" src={currentImage} alt="product image" />
+            <img
+              className="w-full max-h-[500px] overflow-hidden"
+              src={currentImage}
+              alt="product image"
+            />
             <div>
               {/* gallery image */}
               <LightGallery
@@ -176,7 +182,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
                 {listImages
                   .slice(1, listImages.length)
                   .map((image: string, index: number) => (
-                    <a href={image} key={index} className="w-1/4  hidden">
+                    <a href={image} key={index} className="hidden">
                       <img className="w-full" src={image} alt="product image" />
                     </a>
                   ))}
@@ -196,13 +202,14 @@ const CollectionItem: FC<Props> = (props: Props) => {
                 {listImages.map((image: string, index: number) => (
                   <SwiperSlide
                     key={index}
-                    className={`w-1/4 border ${currentImage.includes(image)
-                      ? "border-primary"
-                      : "border-white"
-                      } cursor-pointer`}
+                    className={`w-1/4 border ${
+                      currentImage.includes(image)
+                        ? "border-primary"
+                        : "border-white"
+                    } cursor-pointer`}
                   >
                     <img
-                      className="w-full"
+                      className="w-[100px] h-[100px]"
                       src={image}
                       onClick={handleChangeImage}
                       alt="product image"
@@ -214,10 +221,10 @@ const CollectionItem: FC<Props> = (props: Props) => {
           </div>
           <div className="lg:w-6/12 w-full">
             <div className="pb-5 mb-5 border-b border-borderColor">
-              <h3 className="text-2xl font-medium">test</h3>
+              <h3 className="text-2xl font-medium">{dataDescr.title}</h3>
               {/* price */}
               <div className="flex flex-wrap items-end my-3 gap-3">
-              {dataDescr.price}
+                {dataDescr?._id && `${currencyFormat(dataDescr.price)} VND`}
                 {/* {productData.promotionPrice && (
                   <Fragment>
                     <h3 className="text-2xl font-medium text-[#6a7779] line-through">
@@ -247,7 +254,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
             <div className="pb-5 mb-5 border-b border-borderColor">
               <div className="flex items-center text-sm mb-5">
                 <span className="text-base font-medium min-w-[100px]">
-                  Sold: 
+                  Sold:
                 </span>
                 <p>{dataDescr.sold}</p>
               </div>
@@ -255,7 +262,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
                 <span className="text-base font-medium min-w-[100px]">
                   Brand:
                 </span>
-                <p>{dataDescr.brand?dataDescr.brand:"Updating"}</p>
+                <p>{dataDescr.brand ? dataDescr.brand : "Updating"}</p>
               </div>
               <div className="flex items-center text-sm mb-5">
                 <span className="text-base font-medium min-w-[100px]">
@@ -266,7 +273,6 @@ const CollectionItem: FC<Props> = (props: Props) => {
             </div>
             <div className="pb-5 mb-5 border-b border-borderColor">
               {/* chỗ này mình không biết nó là gì hớt */}
-
 
               {/* <div className="flex items-center">
                 {productData.listSizes.length > 0 && (
@@ -310,7 +316,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
                   <button className="sm:w-6/12 w-full h-full">
                     <p
                       className="flex items-center justify-center w-full h-full text-base font-medium text-white hover:text-dark bg-primary hover:bg-white px-4 gap-2 border border-primary hover:border-dark transition-all ease-linear duration-100"
-                    // onClick={hanldeAddCart}
+                      // onClick={hanldeAddCart}
                     >
                       <AiOutlineShoppingCart className="text-2xl" />
                       Add to cart
@@ -338,8 +344,9 @@ const CollectionItem: FC<Props> = (props: Props) => {
                 key={index}
                 ref={index === 0 ? firstRef : null}
                 name={tag}
-                className={`text-lg whitespace-nowrap font-medium ${tag === currentTag ? "text-primary" : ""
-                  } py-3`}
+                className={`text-lg whitespace-nowrap font-medium ${
+                  tag === currentTag ? "text-primary" : ""
+                } py-3`}
                 onClick={handleChangeLine}
               >
                 {tag}
@@ -354,7 +361,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
           <div className="mt-10">
             {currentTag === "Description" && (
               <div>
-                <p className="text-lg mb-5">description</p>
+                <p className="text-lg mb-5">{dataDescr.description}</p>
               </div>
             )}
 
@@ -716,7 +723,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   return {
     props: {
       query,
-      id
+      id,
     },
   };
 };
