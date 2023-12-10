@@ -1,8 +1,7 @@
 import type { AppProps } from "next/app";
+import { usePathname } from "next/navigation";
 import { Provider } from "react-redux";
-import store from "~/store/index.ts";
-
-import DefaultLayout from "~/layouts/DefaultLayout";
+import { store } from "../store";
 import "swiper/scss";
 import "swiper/scss/navigation";
 import "swiper/scss/pagination";
@@ -14,12 +13,26 @@ import "lightgallery/css/lg-zoom.css";
 import "lightgallery/css/lg-thumbnail.css";
 import "~/styles/globals.scss";
 
+import LAYOUT from "~/layouts";
+
 export default function App({ Component, pageProps }: AppProps) {
+  const pathName = usePathname();
+  let Layout;
+
+  switch (pathName) {
+    case "/login":
+      Layout = LAYOUT.LoginLayout;
+      break;
+
+    default:
+      Layout = LAYOUT.DefaultLayout;
+  }
+
   return (
     <Provider store={store}>
-      <DefaultLayout>
+      <Layout>
         <Component {...pageProps} />
-      </DefaultLayout>
+      </Layout>
     </Provider>
   );
 }

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { FC } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
@@ -11,19 +10,14 @@ import Header from "~/components/Header";
 import CartItem from "~/components/CartItem";
 
 import { RootState } from "~/store";
-import { ClearCarts } from "~/store/actions";
 
 const Cart: FC = () => {
-  const dispatch = useDispatch();
-  const { listCarts, totalPrice } = useSelector(
-    (state: RootState) => state.data
-  );
   return (
     <div>
       <Header title={"Cart"} listBackLinks={[{ title: "Home", link: "/" }]} />
 
       <section className="container__cus">
-        {listCarts.length > 0 ? (
+        {/* {listCarts.length > 0 ? (
           <div>
             <ul className="flex flex-col items-start my-10 lg:gap-5 gap-10">
               {listCarts.map((item: IOrderProduct, index: number) => (
@@ -73,7 +67,13 @@ const Cart: FC = () => {
               Your cart is currently empty.
             </h3>
           </div>
-        )}
+        )} */}
+         <div className="py-10">
+            <h2 className="text-3xl font-medium">Shopping Cart</h2>
+            <h3 className="text-xl font-medium mt-2">
+              Your cart is currently empty.
+            </h3>
+          </div>
       </section>
 
       {/* Category */}

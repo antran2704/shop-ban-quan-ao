@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState, useEffect, FC } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import {
   AiOutlineSearch,
   AiOutlineHeart,
@@ -21,16 +20,11 @@ import useClientY from "~/hooks/useClientY";
 
 
 import { RootState } from "~/store";
-import { GetListCart, handleDeleteProductInCart } from "~/store/actions";
+// import { GetListCart, handleDeleteProductInCart } from "~/store/actions";
 
 import styles from "./Navbar.module.scss";
 
 const Navbar: FC = () => {
-  const dispatch = useDispatch();
-  const { listCarts, totalCart, totalPrice } = useSelector(
-    (state: RootState) => state.data
-  );
-
   const router = useRouter();
   const top = useClientY();
 
@@ -199,7 +193,7 @@ const Navbar: FC = () => {
           >
             <AiOutlineShoppingCart className="relative lg:text-3xl md:text-2xl text-xl z-0" />
             <span className="flex items-center justify-center absolute -top-1 -right-2 md:w-5 md:h-5 w-4 h-4 text-xs text-white bg-primary rounded-full z-10">
-              {totalCart < 100 ? totalCart : "99"}
+              {/* {totalCart < 100 ? totalCart : "99"} */}
             </span>
           </div>
         </div>
@@ -297,7 +291,7 @@ const Navbar: FC = () => {
           >
             <AiOutlineShoppingCart className="relative lg:text-3xl md:text-2xl text-xl z-0" />
             <span className="flex items-center justify-center absolute -top-1 -right-2 md:w-5 md:h-5 w-4 h-4 text-xs text-white bg-primary rounded-full z-10">
-              {totalCart < 100 ? totalCart : "99"}
+              {/* {totalCart < 100 ? totalCart : "99"} */}
             </span>
           </div>
         </div>
@@ -334,7 +328,7 @@ const Navbar: FC = () => {
             />
           </div>
           <ul className="scrollHidden flex flex-col w-full h-[80vh] pb-3 border-b border-borderColor gap-3 overflow-y-auto ">
-            {listCarts.map((item: IOrderProduct, index: number) => (
+            {/* {listCarts.map((item: IOrderProduct, index: number) => (
               <li
                 key={index}
                 className="flex items-center pb-3 px-2 border-b border-borderColor gap-4"
@@ -373,11 +367,11 @@ const Navbar: FC = () => {
                   </p>
                 </div>
               </li>
-            ))}
+            ))} */}
           </ul>
           <div className="flex w-full items-center justify-between pb-3 gap-3">
             <p className="text-lg font-medium">Subtotal:</p>
-            <p className="text-lg text-primary font-medium">${totalPrice}.00</p>
+            {/* <p className="text-lg text-primary font-medium">${totalPrice}.00</p> */}
           </div>
           <div className="flex sm:flex-nowrap flex-wrap justify-between items-center w-full pb-3 border-b border-borderColor gap-2">
             <Link

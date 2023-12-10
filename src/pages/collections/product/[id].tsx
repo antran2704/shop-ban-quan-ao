@@ -3,7 +3,6 @@ import Link from "next/link";
 
 import { useRouter } from "next/router";
 import { useRef, FC, useEffect, useState, MouseEvent, Fragment } from "react";
-import { useDispatch } from "react-redux";
 import axios from "axios";
 // gallery
 import LightGallery from "lightgallery/react";
@@ -28,7 +27,6 @@ import {
   IOrderProduct,
 } from "~/interfaces/apiResponse";
 
-import { GetListCart } from "~/store/actions";
 
 import percentPromotionPrice from "~/helpers/percentPromotionPrice";
 
@@ -46,7 +44,6 @@ const tags: string[] = ["Description", "Reviews", "Shipping Policy"];
 const CollectionItem: FC<Props> = (props: Props) => {
   const { query, id } = props;
   const router = useRouter();
-  const dispatch = useDispatch();
 
   const firstRef = useRef<HTMLButtonElement>(null);
   const lineRef = useRef<HTMLSpanElement>(null);

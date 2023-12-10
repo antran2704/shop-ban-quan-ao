@@ -1,11 +1,9 @@
 import Link from "next/link";
 import { FC, useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { AiOutlineClose } from "react-icons/ai";
 
 import { IInforProduct } from "~/interfaces";
 import { RootState } from "~/store";
-import { handleDeleteProductInCart, GetListCart } from "~/store/actions";
 
 import ProductQuantity from "~/components/ProductQuantity";
 
@@ -17,18 +15,15 @@ interface Props {
 const CartItem: FC<Props> = (props: Props) => {
   const { data, index } = props;
 
-  const dispatch = useDispatch();
-  const { listCarts } = useSelector((state: RootState) => state.data);
 
   const [totalProduct, setTotalProduct] = useState<number>(data.count);
 
   const handleDeleteItemCart = () => {
-    handleDeleteProductInCart(listCarts, index);
-    dispatch(GetListCart());
+    
   };
 
   useEffect(() => {
-    const currentListCarts = [...listCarts];
+    const currentListCarts = [];
     currentListCarts[index] = {
       ...data,
       count: totalProduct,

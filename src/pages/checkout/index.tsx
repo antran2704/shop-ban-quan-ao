@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useDispatch, useSelector } from "react-redux";
 import { FC, useState, ChangeEvent, FormEvent } from "react";
 
 import { IOrderProduct } from "~/interfaces/apiResponse";
@@ -27,11 +26,6 @@ const initInforCustomer: IInforCustomer = {
 };
 
 const CheckOut: FC = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const { listCarts, totalPrice } = useSelector(
-    (state: RootState) => state.data
-  );
-
   const [inforCusomer, setInforCustomer] =
     useState<IInforCustomer>(initInforCustomer);
   const [isSaveInfor, setSaveInfor] = useState<boolean>(false);
@@ -173,7 +167,7 @@ const CheckOut: FC = () => {
           </div>
           <div className="lg:w-5/12 w-full">
             <ul className="scroll flex flex-col lg:max-h-[600px] max-h-[400px] pt-5 overflow-auto gap-6">
-              {listCarts.map((cart: IOrderProduct, index: number) => (
+              {/* {listCarts.map((cart: IOrderProduct, index: number) => (
                 <li
                   key={index}
                   className="flex items-center justify-between w-full pb-5 border-b border-borderColor gap-4"
@@ -200,11 +194,11 @@ const CheckOut: FC = () => {
                     ${cart.price * cart.count}.00
                   </p>
                 </li>
-              ))}
+              ))} */}
             </ul>
             <div className="flex items-center justify-between mt-5 gap-5">
               <p className="text-base font-medium">Total:</p>
-              <p className="text-base font-medium">${totalPrice}.00</p>
+              {/* <p className="text-base font-medium">${totalPrice}.00</p> */}
             </div>
           </div>
         </div>
