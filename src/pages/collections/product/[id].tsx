@@ -1,7 +1,6 @@
 import { GetServerSideProps } from "next";
 import Link from "next/link";
 
-import { useRouter } from "next/router";
 import { useRef, FC, useEffect, useState, MouseEvent, Fragment } from "react";
 import axios from "axios";
 // gallery
@@ -21,18 +20,11 @@ import {
   MdOutlineZoomOutMap,
 } from "react-icons/md";
 
-import {
-  IProduct,
-  IOptionProduct,
-  IOrderProduct,
-} from "~/interfaces/apiResponse";
-
-
 import percentPromotionPrice from "~/helpers/percentPromotionPrice";
 
-import Header from "~/components/Header";
 import ProductQuantity from "~/components/ProductQuantity";
 import { currencyFormat } from "~/helpers/currencyFormat";
+import Header from "~/components/Header";
 
 interface Props {
   query: any;
@@ -42,8 +34,7 @@ interface Props {
 const tags: string[] = ["Description", "Reviews", "Shipping Policy"];
 
 const CollectionItem: FC<Props> = (props: Props) => {
-  const { query, id } = props;
-  const router = useRouter();
+  const { id } = props;
 
   const firstRef = useRef<HTMLButtonElement>(null);
   const lineRef = useRef<HTMLSpanElement>(null);
@@ -53,11 +44,11 @@ const CollectionItem: FC<Props> = (props: Props) => {
   const [currentImage, setCurrentImage] = useState<string>("");
   const [currentTag, setCurrentTag] = useState<string>("");
   const [listImages, setListImages] = useState<any>([]);
-  const [dataDescr, setDataDescr] = useState<any>([]);
-  const [message, setMessage] = useState({
-    messageSize: "",
-    messageColor: "",
-  });
+  const [product, setProduct] = useState<any>([]);
+  const [products, setProducts] = useState<any>([]);
+  const [selectOption, setSelectOption] = useState<any>({});
+
+  const [message, setMessage] = useState<string | null>(null);
 
   const handleChangeImage = (e: MouseEvent<HTMLImageElement>) => {
     setCurrentImage(e.currentTarget.src);
@@ -74,53 +65,42 @@ const CollectionItem: FC<Props> = (props: Props) => {
     }
   };
 
-  // const hanldeAddCart = () => {
-  //   if (productData.listSizes.length > 0 || productData.listColors.length > 0) {
-  //     if (productData.listSizes.length > 0 && !query.size) {
-  //       setMessage({ ...message, messageSize: "Please choose your size!!!" });
-  //       return;
-  //     }
+  const onSelectOption = (key: any, value: any) => {
+    if (message) {
+      setMessage(null);
+    }
 
-  //     if (productData.listColors.length > 0 && !query.color) {
-  //       setMessage({ ...message, messageColor: "Please choose your color!!!" });
-  //       return;
-  //     }
-  //   }
+    if (selectOption[key] === value) {
+      let newOption = selectOption;
+      delete newOption[key];
 
-  //   let exitIndex = 0;
-  //   const dataProduct: IOrderProduct = {
-  //     name: productData.name,
-  //     slug: router.asPath,
-  //     count: totalProduct,
-  //     price: productData.promotionPrice
-  //       ? productData.promotionPrice
-  //       : productData.price,
-  //     size: query.size || undefined,
-  //     color: query.color || undefined,
-  //     avatarProduct: listImages[0],
-  //   };
-  //   const listCarted = JSON.parse(localStorage.getItem("listCart") || "[]");
-  //   const exitItem = listCarted.find((item: IOrderProduct, index: number) => {
-  //     if (item.name === dataProduct.name && item.slug === dataProduct.slug) {
-  //       exitIndex = index;
-  //       return item;
-  //     }
-  //   });
+      setSelectOption({ ...newOption });
+      return;
+    }
 
-  //   if (exitItem) {
-  //     listCarted[exitIndex] = {
-  //       ...exitItem,
-  //       count: exitItem.count + dataProduct.count,
-  //     };
-  //     localStorage.setItem("listCart", JSON.stringify(listCarted));
-  //     setShow(true);
-  //   } else {
-  //     listCarted.push(dataProduct);
-  //     localStorage.setItem("listCart", JSON.stringify(listCarted));
-  //     setShow(true);
-  //   }
-  //   dispatch(GetListCart());
-  // };
+    setSelectOption({ ...selectOption, [key]: value });
+  };
+
+  const handleGetOtherProducts = async () => {
+    try {
+      const response = await axios
+        .get(`${process.env.NEXT_PUBLIC_ENDPOINT_API}/products?page=1`)
+        .then((res) => res.data);
+
+      if (response.status === 200) {
+        setProducts(response.payload);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const hanldeAddCart = () => {
+    if (Object.keys(selectOption).length < product.options.length) {
+      setMessage("Please select options");
+      return;
+    }
+  };
 
   const handleGetProduct = async () => {
     try {
@@ -131,7 +111,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
       console.log(response);
       setCurrentImage(response.payload.gallery[0]);
       setListImages(response.payload.gallery);
-      setDataDescr(response.payload);
+      setProduct(response.payload);
       console.log(response);
     } catch (error) {
       console.log(error);
@@ -150,9 +130,21 @@ const CollectionItem: FC<Props> = (props: Props) => {
     }
 
     handleGetProduct();
-  }, []);
+    handleGetOtherProducts();
+  }, [id]);
   return (
     <div>
+      <Header
+        title={product?.title || ""}
+        listBackLinks={[
+          { title: "Home", link: "/" },
+          {
+            title: product.category?.title,
+            link: `/collections/${product.category?._id}`,
+          },
+        ]}
+      />
+
       <section className="container__cus">
         <div className="flex lg:flex-nowrap flex-wrap items-start lg:justify-between justify-center my-14 lg:gap-5 gap-8">
           <div className="relative lg:w-5/12 sm:w-6/12 w-full">
@@ -218,34 +210,37 @@ const CollectionItem: FC<Props> = (props: Props) => {
           </div>
           <div className="lg:w-6/12 w-full">
             <div className="pb-5 mb-5 border-b border-borderColor">
-              <h3 className="text-2xl font-medium">{dataDescr.title}</h3>
+              <h3 className="text-2xl font-medium">{product.title}</h3>
               {/* price */}
-              <div className="flex flex-wrap items-end my-3 gap-3">
-                {dataDescr?._id && `${currencyFormat(dataDescr.price)} VND`}
-                {/* {productData.promotionPrice && (
-                  <Fragment>
-                    <h3 className="text-2xl font-medium text-[#6a7779] line-through">
-                      ${productData.promotionPrice}.00
-                    </h3>
-                    <h2 className="text-3xl font-medium">
-                      ${productData.price}.00
-                    </h2>
-                    <span className="text-sm font-medium text-white px-2 py-0.5 bg-primary rounded-md">
-                      Save -
-                      {percentPromotionPrice(
-                        productData.price,
-                        productData.promotionPrice
-                      )}
-                      %
-                    </span>
-                  </Fragment>
-                )}
-                {!productData.promotionPrice && (
-                  <h2 className="text-3xl font-medium">${productData.price}</h2>
-                )} */}
-              </div>
+              {product._id && (
+                <div className="flex flex-wrap items-end my-3 gap-3">
+                  {product.promotion_price && (
+                    <Fragment>
+                      <h3 className="text-lg font-medium text-primary line-through">
+                        {`${currencyFormat(product.promotion_price)} VND`}
+                      </h3>
+                      <h2 className="text-base font-medium text-[#6a7779] line-through">
+                        {`${currencyFormat(product.price)} VND`}
+                      </h2>
+                      <span className="text-sm font-medium text-white px-2 py-0.5 bg-primary rounded-md">
+                        Save -
+                        {percentPromotionPrice(
+                          product.price,
+                          product.promotion_price
+                        )}
+                        %
+                      </span>
+                    </Fragment>
+                  )}
+                  {!product.promotionPrice && (
+                    <h2 className="text-lg font-medium text-primary">{`${currencyFormat(
+                      product.price
+                    )} VND`}</h2>
+                  )}
+                </div>
+              )}
               <p className="text-base text-[#071c1f]">
-                {dataDescr.shortDescription}
+                {product.shortDescription}
               </p>
             </div>
             <div className="pb-5 mb-5 border-b border-borderColor">
@@ -253,53 +248,50 @@ const CollectionItem: FC<Props> = (props: Props) => {
                 <span className="text-base font-medium min-w-[100px]">
                   Sold:
                 </span>
-                <p>{dataDescr.sold}</p>
+                <p>{product.sold}</p>
               </div>
               <div className="flex items-center text-sm mb-5">
                 <span className="text-base font-medium min-w-[100px]">
                   Brand:
                 </span>
-                <p>{dataDescr.brand ? dataDescr.brand : "Updating"}</p>
+                <p>{product.brand ? product.brand : "Updating"}</p>
               </div>
               <div className="flex items-center text-sm mb-5">
                 <span className="text-base font-medium min-w-[100px]">
                   Quantity:
                 </span>
-                <p>10</p>
+                <p>{product.inventory}</p>
               </div>
             </div>
             <div className="pb-5 mb-5 border-b border-borderColor">
-              {/* chỗ này mình không biết nó là gì hớt */}
-
-              {/* <div className="flex items-center">
-                {productData.listSizes.length > 0 && (
-                  <Fragment>
+              {product._id &&
+                product.options.length > 0 &&
+                product.options.map((option: any, index: number) => (
+                  <div key={index} className="flex items-center mb-5 gap-5">
                     <span className="text-base font-medium min-w-[100px]">
-                      Size:
+                      {option.name}:
                     </span>
-                    <form className="flex flex-wrap items-center gap-2">
-                      {productData.listSizes.map(
-                        (size: IOptionProduct, index: number) => (
-                          <input
-                            key={index}
-                            type="submit"
-                            name="size"
-                            value={size.value}
-                            className={`text-sm px-4 py-0.5 font-medium hover:text-white ${
-                              query.size === size.value
-                                ? "bg-primary text-white"
-                                : ""
-                            } hover:bg-primary border border-borderColor transition-all ease-linear duration-100 cursor-pointer`}
-                          />
-                        )
-                      )}
-                    </form>
-                  </Fragment>
-                )}
-              </div> */}
-              <p className="text-lg text-primary font-medium mt-3">
-                {message.messageSize}
-              </p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      {option.values.map((value: any) => (
+                        <button
+                          key={value._id}
+                          onClick={() =>
+                            onSelectOption(option.code, value.label)
+                          }
+                          className={`text-base px-4 py-1 font-medium hover:text-white ${
+                            selectOption[option.code] === value.label
+                              ? "bg-primary text-white"
+                              : ""
+                          } hover:bg-primary border border-borderColor transition-all ease-linear duration-100 cursor-pointer`}
+                        >
+                          {value.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+
+              {message && <p className="text-base text-red-500">{message}</p>}
             </div>
             <div className="pb-5 mb-5 border-b border-borderColor">
               <div className="flex flex-wrap items-center gap-3">
@@ -313,7 +305,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
                   <button className="sm:w-6/12 w-full h-full">
                     <p
                       className="flex items-center justify-center w-full h-full text-base font-medium text-white hover:text-dark bg-primary hover:bg-white px-4 gap-2 border border-primary hover:border-dark transition-all ease-linear duration-100"
-                      // onClick={hanldeAddCart}
+                      onClick={hanldeAddCart}
                     >
                       <AiOutlineShoppingCart className="text-2xl" />
                       Add to cart
@@ -358,7 +350,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
           <div className="mt-10">
             {currentTag === "Description" && (
               <div>
-                <p className="text-lg mb-5">{dataDescr.description}</p>
+                <p className="text-lg mb-5">{product.description}</p>
               </div>
             )}
 
@@ -440,13 +432,11 @@ const CollectionItem: FC<Props> = (props: Props) => {
         </div>
       </section>
 
-      {/* Category */}
+      {/* ohter products */}
       <section className="category my-10">
         <div className="container__cus">
           <div className="flex items-center justify-between mb-6">
-            <p className="text-xl font-normal text-[#1e1e1e]">
-              Shop By Category
-            </p>
+            <p className="text-xl font-normal text-[#1e1e1e]">Other Products</p>
             <div className="flex items-center gap-2">
               <button className="category__btn-prev flex items-center justify-center w-8 h-8 bg-[#f0f0f0] hover:bg-primary rounded-full transition-all duration-100">
                 <MdKeyboardArrowLeft className="text-3xl text-[#9ea18e] hover:text-white" />
@@ -477,186 +467,29 @@ const CollectionItem: FC<Props> = (props: Props) => {
                 },
               }}
             >
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-1.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Architecture Art Lorem
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-2.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Theater Art
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-3.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Ceramics Art
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-4.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Sculpture Art
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-5.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Painting Art
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-1.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Architecture Art Lorem
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-2.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Theater Art
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-3.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Ceramics Art
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-4.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Sculpture Art
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
-              <SwiperSlide className="w-2/12">
-                <Link href={"/"} className="w-ful">
-                  <img
-                    src="/images/category-5.avif"
-                    alt="image category"
-                    className="w-full rounded-xl"
-                  />
-                </Link>
-                <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
-                  Painting Art
-                </p>
-                <a
-                  href="#"
-                  className="block w-full text-sm font-medium text-primary text-center hover:underline"
-                >
-                  View more
-                </a>
-              </SwiperSlide>
+              {products.map((item: any, index: number) => (
+                <SwiperSlide key={index} className="w-2/12">
+                  <Link
+                    href={`/collections/product/${item._id}`}
+                    className="w-ful"
+                  >
+                    <img
+                      src={item.thumbnail}
+                      alt="image product"
+                      className="w-[200px] h-[200px] rounded-xl"
+                    />
+                  </Link>
+                  <p className="text-base font-normal text-[#1e1e1e] text-center mt-3 truncate">
+                    {item.title}
+                  </p>
+                  <a
+                    href="#"
+                    className="block w-full text-sm font-medium text-primary text-center hover:underline"
+                  >
+                    View more
+                  </a>
+                </SwiperSlide>
+              ))}
             </Swiper>
           </div>
         </div>

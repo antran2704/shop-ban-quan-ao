@@ -9,11 +9,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
 import {
-  ICategory,
-  IFilterCategory,
   IProduct,
   IPagination,
-  IListProduct,
 } from "~/interfaces/apiResponse";
 
 import Header from "~/components/Header";
@@ -38,7 +35,6 @@ const CollectionItem: FC<Props> = (props: Props) => {
   const currentPage = query.page ? Number(query.page) : 1;
 
   const btnSubmitFilterRef = useRef<HTMLButtonElement>(null);
-  const [breadcrumb, setBreadcrumb] = useState<string>("");
   const [categoryData, setCategoryData] = useState<any>();
   const [products, setProducts] = useState<any>([]);
   const [pagination, setPagination] = useState<IPagination>(initPagination);
