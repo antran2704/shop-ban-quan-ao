@@ -25,6 +25,9 @@ import percentPromotionPrice from "~/helpers/percentPromotionPrice";
 import ProductQuantity from "~/components/ProductQuantity";
 import { currencyFormat } from "~/helpers/currencyFormat";
 import Header from "~/components/Header";
+import { useAppDispatch, useAppSelector } from "~/store/hooks";
+import { updateItem } from "~/store/slice/cartSlice";
+import { toast } from "react-toastify";
 
 interface Props {
   query: any;
@@ -35,12 +38,14 @@ const tags: string[] = ["Description", "Reviews", "Shipping Policy"];
 
 const CollectionItem: FC<Props> = (props: Props) => {
   const { id } = props;
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user);
 
   const firstRef = useRef<HTMLButtonElement>(null);
   const lineRef = useRef<HTMLSpanElement>(null);
 
   const [showPopup, setShow] = useState<boolean>(false);
-  const [totalProduct, setTotalProduct] = useState<number>(1);
+  const [quantity, setQuantity] = useState<number>(1);
   const [currentImage, setCurrentImage] = useState<string>("");
   const [currentTag, setCurrentTag] = useState<string>("");
   const [listImages, setListImages] = useState<any>([]);
@@ -95,10 +100,47 @@ const CollectionItem: FC<Props> = (props: Props) => {
     }
   };
 
-  const hanldeAddCart = () => {
+  const hanldeAddCart = async () => {
+    if (!user.infor._id) {
+      setShow(true);
+      return;
+    }
+
     if (Object.keys(selectOption).length < product.options.length) {
       setMessage("Please select options");
       return;
+    }
+
+    try {
+      const payload = {
+        product_id: product._id,
+        variation_id: null,
+        quantity,
+        price: product.price,
+      };
+      const response = await axios
+        .post(
+          `${process.env.NEXT_PUBLIC_ENDPOINT_API}/carts/update/${user.infor._id}`,
+          payload
+        )
+        .then((res) => res.data);
+      if (response.status === 201) {
+        const payload = {
+          cart_count: response.payload.cart_count,
+          cart_total: response.payload.cart_total,
+          cart_products: response.payload.cart_products,
+        };
+
+        dispatch(updateItem(payload));
+        toast.success("Add product success", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Add product failed", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
     }
   };
 
@@ -108,11 +150,9 @@ const CollectionItem: FC<Props> = (props: Props) => {
         .get(`${process.env.NEXT_PUBLIC_ENDPOINT_API}/products/id/${id}`)
         .then((res) => res.data);
 
-      console.log(response);
       setCurrentImage(response.payload.gallery[0]);
       setListImages(response.payload.gallery);
       setProduct(response.payload);
-      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -214,7 +254,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
               {/* price */}
               {product._id && (
                 <div className="flex flex-wrap items-end my-3 gap-3">
-                  {product.promotion_price && (
+                  {product.promotion_price > 0 && (
                     <Fragment>
                       <h3 className="text-lg font-medium text-primary line-through">
                         {`${currencyFormat(product.promotion_price)} VND`}
@@ -232,7 +272,7 @@ const CollectionItem: FC<Props> = (props: Props) => {
                       </span>
                     </Fragment>
                   )}
-                  {!product.promotionPrice && (
+                  {product.promotion_price <= 0 && (
                     <h2 className="text-lg font-medium text-primary">{`${currencyFormat(
                       product.price
                     )} VND`}</h2>
@@ -297,8 +337,8 @@ const CollectionItem: FC<Props> = (props: Props) => {
               <div className="flex flex-wrap items-center gap-3">
                 <div className="lg:w-3/12 w-6/12">
                   <ProductQuantity
-                    totalProduct={totalProduct}
-                    setTotalProduct={setTotalProduct}
+                    totalProduct={quantity}
+                    setTotalProduct={setQuantity}
                   />
                 </div>
                 <div className="lg:w-8/12 sm:flex-nowrap flex-wrap w-full flex items-center h-14 gap-3">
@@ -311,11 +351,11 @@ const CollectionItem: FC<Props> = (props: Props) => {
                       Add to cart
                     </p>
                   </button>
-                  <button className="sm:w-6/12 w-full h-full">
+                  {/* <button className="sm:w-6/12 w-full h-full">
                     <p className="flex items-center justify-center w-full h-full text-base font-medium text-white bg-dark hover:bg-primary px-4 transition-all ease-linear duration-100 gap-2">
                       Buy it now
                     </p>
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
@@ -511,31 +551,23 @@ const CollectionItem: FC<Props> = (props: Props) => {
               className="text-2xl ml-auto mb-2 cursor-pointer"
               onClick={() => setShow(false)}
             />
-            <div className="flex items-center gap-5">
-              <img
-                src={listImages[0]}
-                alt="image"
-                className="w-[100px] h-100px"
-              />
-              <div>
-                <h2 className="text-lg font-medium">
-                  X. Complementary Product 2
-                </h2>
-                <p className="flex items-center text-lg">
-                  <AiFillCheckCircle className="text-xl text-[#28a745]" />
-                  Successfully added to your Cart
-                </p>
-                <div className="flex items-center mt-5 gap-5">
-                  <Link
-                    href={"/cart"}
-                    className="flex items-center justify-center text-sm font-medium text-white hover:text-dark bg-primary hover:bg-white px-4 py-2 gap-2 border border-primary hover:border-dark transition-all ease-linear duration-100"
-                  >
-                    View cart
-                  </Link>
-                  <button className="flex items-center justify-center text-sm font-medium text-white bg-dark hover:bg-primary px-4 py-2 transition-all ease-linear border border-transparent duration-100 gap-2">
-                    Check out
-                  </button>
-                </div>
+            <div>
+              <h2 className="text-xl font-medium text-center">
+                Vui lòng đăng nhập
+              </h2>
+              <div className="flex items-center justify-between mt-5 gap-5">
+                <button
+                  onClick={() => setShow(false)}
+                  className="flex items-center justify-center text-lg font-medium text-white bg-dark hover:bg-primary px-4 py-2 transition-all ease-linear rounded-lg border border-transparent duration-100 gap-2"
+                >
+                  Cancle
+                </button>
+                <Link
+                  href={"/login"}
+                  className="flex items-center justify-center text-lg font-medium text-white hover:text-dark bg-primary hover:bg-white px-4 py-2 gap-2 rounded-lg border border-primary hover:border-dark transition-all ease-linear duration-100"
+                >
+                  Login
+                </Link>
               </div>
             </div>
           </div>

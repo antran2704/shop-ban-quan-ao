@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState, useEffect, FC } from "react";
+import React, { useState, useEffect, FC, Fragment } from "react";
 import {
   AiOutlineSearch,
   AiOutlineHeart,
@@ -13,22 +13,22 @@ import { HiMenu } from "react-icons/hi";
 
 import { initItemDesktop, initItemMobile } from "./index";
 
-import { IOrderProduct } from "~/interfaces/apiResponse";
 import { IMegaItem, INavItem } from "./interface";
-
 import useClientY from "~/hooks/useClientY";
-
-
-import { RootState } from "~/store";
-// import { GetListCart, handleDeleteProductInCart } from "~/store/actions";
-
+import { useAppDispatch, useAppSelector } from "~/store/hooks";
+import { setInforCart, updateItem } from "~/store/slice/cartSlice";
 import styles from "./Navbar.module.scss";
+import axios from "axios";
+import { currencyFormat } from "~/helpers/currencyFormat";
 
 const Navbar: FC = () => {
   const router = useRouter();
   const top = useClientY();
 
-  // const [totalCart, setTotalCart] = useState<number>(0);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user);
+  const cart = useAppSelector((state) => state.cart);
+
   const [showNavbar, setShow] = useState<boolean>(false);
   const [showModalCart, setShowModalCart] = useState<boolean>(false);
   const [currentNav, setCurrentNav] = useState([initItemMobile]);
@@ -49,9 +49,29 @@ const Navbar: FC = () => {
     setCurrentNav(newCurrentMenu);
   };
 
+  const handeGetCart = async () => {
+    if (!user.infor._id) return;
+
+    try {
+      const response = await axios
+        .get(`${process.env.NEXT_PUBLIC_ENDPOINT_API}/carts/${user.infor._id}`)
+        .then((res) => res.data);
+
+      if (response.status === 200) {
+        dispatch(setInforCart(response.payload));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     setShowModalCart(false);
   }, [router.pathname]);
+
+  useEffect(() => {
+    handeGetCart();
+  }, []);
 
   return (
     <header>
@@ -121,11 +141,6 @@ const Navbar: FC = () => {
                       </ul>
                     </div>
                   ))}
-                  {/* <img
-                  src="https://www.livingspaces.com/globalassets/images/nav/02_d_bedroom_0624.jpg"
-                  alt=""
-                  className="h-full "
-                /> */}
                 </ul>
               )}
             </li>
@@ -181,21 +196,34 @@ const Navbar: FC = () => {
           <div className="relative cursor-pointer">
             <AiOutlineSearch className="lg:text-3xl md:text-2xl text-xl" />
           </div>
-          <div className="relative cursor-pointer">
-            <AiOutlineHeart className="relative lg:text-3xl md:text-2xl text-xl z-0" />
-            <span className="flex items-center justify-center absolute -top-1 -right-2 md:w-5 md:h-5 w-4 h-4 text-xs text-white bg-primary rounded-full z-10">
-              0
-            </span>
-          </div>
-          <div
-            className="relative cursor-pointer"
-            onClick={() => setShowModalCart(true)}
-          >
-            <AiOutlineShoppingCart className="relative lg:text-3xl md:text-2xl text-xl z-0" />
-            <span className="flex items-center justify-center absolute -top-1 -right-2 md:w-5 md:h-5 w-4 h-4 text-xs text-white bg-primary rounded-full z-10">
-              {/* {totalCart < 100 ? totalCart : "99"} */}
-            </span>
-          </div>
+          {user.infor._id && (
+            <Fragment>
+              <div className="relative cursor-pointer">
+                <AiOutlineHeart className="relative lg:text-3xl md:text-2xl text-xl z-0" />
+                <span className="flex items-center justify-center absolute -top-1 -right-2 md:w-5 md:h-5 w-4 h-4 text-xs text-white bg-primary rounded-full z-10">
+                  0
+                </span>
+              </div>
+              <div
+                className="relative cursor-pointer"
+                onClick={() => setShowModalCart(true)}
+              >
+                <AiOutlineShoppingCart className="relative lg:text-3xl md:text-2xl text-xl z-0" />
+                <span className="flex items-center justify-center absolute -top-1 -right-2 md:w-5 md:h-5 w-4 h-4 text-xs text-white bg-primary rounded-full z-10">
+                  {cart.cart_count < 100 ? cart.cart_count : "99+"}
+                </span>
+              </div>
+            </Fragment>
+          )}
+
+          {!user.infor._id && (
+            <Link
+              href="/login"
+              className="text-lg font-medium py-2 px-5 rounded-lg bg-white hover:bg-primary hover:text-white border-2 hover:border-primary"
+            >
+              Login
+            </Link>
+          )}
         </div>
       </nav>
 
@@ -290,8 +318,8 @@ const Navbar: FC = () => {
             onClick={() => setShowModalCart(true)}
           >
             <AiOutlineShoppingCart className="relative lg:text-3xl md:text-2xl text-xl z-0" />
-            <span className="flex items-center justify-center absolute -top-1 -right-2 md:w-5 md:h-5 w-4 h-4 text-xs text-white bg-primary rounded-full z-10">
-              {/* {totalCart < 100 ? totalCart : "99"} */}
+            <span className="flex items-center justify-center absolute -top-1 -right-2 md:w-5 md:h-5 w-4 h-4 textbase text-white bg-primary rounded-full z-10">
+              {cart.cart_count < 100 ? cart.cart_count : "99+"}
             </span>
           </div>
         </div>
@@ -328,46 +356,46 @@ const Navbar: FC = () => {
             />
           </div>
           <ul className="scrollHidden flex flex-col w-full h-[80vh] pb-3 border-b border-borderColor gap-3 overflow-y-auto ">
-            {/* {listCarts.map((item: IOrderProduct, index: number) => (
+            {cart.cart_products.map((item: any, index: number) => (
               <li
                 key={index}
                 className="flex items-center pb-3 px-2 border-b border-borderColor gap-4"
               >
                 <div className="relative h-20">
                   <img
-                    src={item.avatarProduct}
+                    src={item.product_id.thumbnail}
                     className="sm:w-[80px] sm:h-[80px] w-[60px] h-[60px]"
                     alt="img"
                   />
                   <AiFillCloseCircle
                     onClick={() => {
-                      handleDeleteProductInCart(listCarts, index);
-                      dispatch(GetListCart());
+                      // handleDeleteProductInCart(listCarts, index);
+                      // dispatch(GetListCart());
                     }}
                     className="absolute -top-0.5 -left-1 text-2xl hover:text-primary cursor-pointer"
                   />
                 </div>
                 <div className="w-8/12">
                   <Link
-                    href={item.slug}
+                    href={`/collections/product/${item.product_id._id}`}
                     className="sm:text-base text-sm font-medium hover:text-primary"
                   >
-                    {item.name}
+                    {item.product_id.title}
                   </Link>
-                  <div className="flex items-center gap-2">
+                  {/* <div className="flex items-center gap-2">
                     {item.size && (
                       <span className="sm:text-sm text-xs">Size: {item.size}</span>
                     )}
                     {item.color && (
                       <span className="sm:text-sm text-xs">Color: {item.color}</span>
                     )}
-                  </div>
+                  </div> */}
                   <p className="sm:text-base text-sm mt-2">
-                    {item.count} X ${item.price}.00
+                    {item.quantity} X {`${currencyFormat(item.price)} VND`}
                   </p>
                 </div>
               </li>
-            ))} */}
+            ))}
           </ul>
           <div className="flex w-full items-center justify-between pb-3 gap-3">
             <p className="text-lg font-medium">Subtotal:</p>

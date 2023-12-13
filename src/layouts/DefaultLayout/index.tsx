@@ -1,20 +1,67 @@
 import dynamic from "next/dynamic";
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
+import { getCookies } from "cookies-next";
 
 import Footer from "~/components/Footer";
-
-const Navbar = dynamic(() => import("~/components/Navbar/Navbar"), {
-  ssr: false,
-});
+import axios from "axios";
+import { login } from "~/store/slice";
+import { useAppDispatch } from "~/store/hooks";
+import Navbar from "~/components/Navbar/Navbar";
+import Loading from "~/components/Loading";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface Props {
   children: JSX.Element;
 }
 
 const DefaultLayout: FC<Props> = ({ children }: Props) => {
+  const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const handleGetUser = async () => {
+    const { accessToken, publicKey } = getCookies();
+
+    if (!accessToken || !publicKey) {
+      setLoading(false);
+      return;
+    };
+
+    setLoading(true);
+    try {
+      const response = await axios
+        .get(`${process.env.NEXT_PUBLIC_ENDPOINT_API}/users`, {
+          headers: {
+            Authorization: `Bear ${accessToken}`,
+            "public-key": `Key ${publicKey}`,
+          },
+        })
+        .then((res) => res.data);
+
+      if (response.status === 200) {
+        const infor = {
+          _id: response.payload._id,
+          name: response.payload.name,
+          email: response.payload.email,
+          avartar: response.payload.avartar,
+        };
+
+        dispatch(login(infor));
+      }
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleGetUser();
+  }, []);
+
   return (
     <main>
-      <Navbar />
+      {!loading && <Navbar />}
       {children}
       {/* Get Our Latets Update  */}
       <section
@@ -46,6 +93,12 @@ const DefaultLayout: FC<Props> = ({ children }: Props) => {
         </div>
       </section>
       <Footer />
+      <ToastContainer
+        autoClose={5000}
+        pauseOnFocusLoss={false}
+        pauseOnHover={false}
+      />
+      {loading && <Loading />}
     </main>
   );
 };
