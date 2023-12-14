@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
@@ -12,18 +12,61 @@ import { currencyFormat } from "~/helpers/currencyFormat";
 import { toast } from "react-toastify";
 import { updateItem } from "~/store/slice/cartSlice";
 import axios from "axios";
+import Loading from "~/components/Loading";
+let timmer: any;
 
 const Cart: FC = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
   const cart = useAppSelector((state) => state.cart);
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   const hanldeUpdateCart = async (payload: any) => {
-    console.log("payload:::", payload)
+    if (timmer) {
+      clearTimeout(timmer);
+    }
+
+    try {
+      timmer = setTimeout(async () => {
+        const response = await axios
+          .post(
+            `${process.env.NEXT_PUBLIC_ENDPOINT_API}/carts/update/${user.infor._id}`,
+            payload
+          )
+          .then((res) => res.data);
+        if (response.status === 201) {
+          const payload = {
+            cart_count: response.payload.cart_count,
+            cart_total: response.payload.cart_total,
+            cart_products: response.payload.cart_products,
+          };
+
+          dispatch(updateItem(payload));
+          toast.success("Updated success", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
+        }
+      }, 1000);
+    } catch (error) {
+      console.log(error);
+      toast.error("Add product failed", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
+  };
+
+  const handleDeleteItemCart = async (payload: any) => {
+    if (timmer) {
+      clearTimeout(timmer);
+    }
+
+    setLoading(true);
+
     try {
       const response = await axios
         .post(
-          `${process.env.NEXT_PUBLIC_ENDPOINT_API}/carts/update/${user.infor._id}`,
+          `${process.env.NEXT_PUBLIC_ENDPOINT_API}/carts/item/${user.infor._id}`,
           payload
         )
         .then((res) => res.data);
@@ -35,15 +78,17 @@ const Cart: FC = () => {
         };
 
         dispatch(updateItem(payload));
-        toast.success("Updated success", {
+        toast.success("Delete item success", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
+        setLoading(false);
       }
     } catch (error) {
       console.log(error);
       toast.error("Add product failed", {
         position: toast.POSITION.TOP_RIGHT,
       });
+      setLoading(false);
     }
   };
 
@@ -59,6 +104,7 @@ const Cart: FC = () => {
                 {cart.cart_products.map((item: any, index: number) => (
                   <CartItem
                     onUpdate={hanldeUpdateCart}
+                    onDelete={handleDeleteItemCart}
                     data={item}
                     index={index}
                     key={index}
@@ -342,6 +388,8 @@ const Cart: FC = () => {
           </div>
         </div>
       </section>
+
+      {loading && <Loading />}
     </div>
   );
 };

@@ -1,28 +1,61 @@
 import Link from "next/link";
-import { FC, useState, useEffect, ChangeEvent } from "react";
+import { FC, useState, ChangeEvent } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
-import ProductQuantity from "~/components/ProductQuantity";
 import { currencyFormat } from "~/helpers/currencyFormat";
 
 interface Props {
   data: any;
   index: number;
   onUpdate: (payload: any) => void;
+  onDelete: (payload: any) => void;
 }
 
-const CartItem: FC<Props> = (props: Props) => {
-  const { data, onUpdate } = props;
+let timmer: any;
 
-  // const [totalProduct, setTotalProduct] = useState<number>(data.quantity);
+const CartItem: FC<Props> = (props: Props) => {
+  const { data, onUpdate, onDelete } = props;
+  const [quantity, setQuantity] = useState<number>(data.quantity);
+
+  const onInputQuantity = (value: number) => {
+    if (timmer) {
+      clearTimeout(timmer);
+    }
+
+    timmer = setTimeout(() => {
+      if (value <= 0) {
+        onDelete({
+          product_id: data.product_id._id,
+          variation: data.variation_id,
+        });
+
+        return;
+      }
+      const payload = {
+        ...data,
+        product_id: data.product_id._id,
+        quantity: value,
+      };
+      onUpdate(payload);
+    }, 1000);
+  };
 
   const onChangeQuantity = (type: any) => {
+    if (type === "SUBTRACT" && quantity - 1 <= 0) {
+      onDelete({
+        product_id: data.product_id._id,
+        variation: data.variation_id,
+      });
+
+      return;
+    }
+
     let payload;
     if (type === "ADD") {
       payload = {
         ...data,
         product_id: data.product_id._id,
-        quantity: data.quantity + 1,
+        quantity: quantity + 1,
       };
     }
 
@@ -30,20 +63,11 @@ const CartItem: FC<Props> = (props: Props) => {
       payload = {
         ...data,
         product_id: data.product_id._id,
-        quantity: data.quantity - 1,
+        quantity: quantity - 1,
       };
     }
-
     onUpdate(payload);
   };
-
-  // const handleDecreaseTotal = (): void => {
-  //   if (totalProduct > 1) {
-  //     setTotalProduct(totalProduct - 1);
-  //   }
-  // };
-
-  const handleDeleteItemCart = () => {};
 
   return (
     <li className="flex lg:flex-row flex-col items-center justify-between w-full lg:pb-5 p-5 border border-borderColor gap-5">
@@ -75,21 +99,28 @@ const CartItem: FC<Props> = (props: Props) => {
       <div className="lg:w-2/12 w-full">
         <div className="flex items-center w-full h-14">
           <button
-            onClick={() => onChangeQuantity("SUBTRACT")}
+            onClick={() => {
+              setQuantity(quantity - 1);
+              onChangeQuantity("SUBTRACT");
+            }}
             className="flex items-center justify-center text-xl font-medium w-4/12 h-full border border-borderColor"
           >
             -
           </button>
           <input
             type="text"
-            // onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            //   setTotalProduct(Number(e.target.value))
-            // }
-            value={data.quantity}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              setQuantity(Number(e.target.value));
+              onInputQuantity(Number(e.target.value));
+            }}
+            value={quantity}
             className="flex items-center justify-center text-base text-center font-medium w-4/12 h-full border border-borderColor"
           />
           <button
-            onClick={() => onChangeQuantity("ADD")}
+            onClick={() => {
+              setQuantity(quantity + 1);
+              onChangeQuantity("ADD");
+            }}
             className="flex items-center justify-center text-xl font-medium w-4/12 h-full border border-borderColor"
           >
             +
@@ -102,7 +133,12 @@ const CartItem: FC<Props> = (props: Props) => {
       <div className="flex items-center justify-center lg:w-1/12 w-full">
         <AiOutlineClose
           className="text-xl cursor-pointer"
-          onClick={handleDeleteItemCart}
+          onClick={() =>
+            onDelete({
+              product_id: data.product_id._id,
+              variation: data.variation_id,
+            })
+          }
         />
       </div>
     </li>
